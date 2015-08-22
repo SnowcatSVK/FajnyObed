@@ -1,5 +1,7 @@
 package com.snowcat.fajnyobed.Logic;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,10 +15,11 @@ public class RestaurantFactory {
 
     public static ArrayList<Restaurant> fromJSON(JSONObject jsonObject) {
         ArrayList<Restaurant> restaurants = new ArrayList<>(jsonObject.length());
-        for (int i = 0; i < restaurants.size(); i++) {
+        for (int i = 0; i < jsonObject.length()-1; i++) {
             JSONObject restaurantJson = null;
             try {
-                restaurantJson = jsonObject.getJSONObject(Integer.toString(i));
+                Log.e("restaurantJSON", "" + jsonObject.getJSONObject(""+String.valueOf(i)).toString());
+                restaurantJson = jsonObject.getJSONObject(""+i);
             } catch (JSONException e) {
                 e.printStackTrace();
                 continue;
@@ -33,12 +36,10 @@ public class RestaurantFactory {
         try {
             restaurant.id = jsonObject.getInt("restaurant_id");
             restaurant.name = jsonObject.getString("name");
-            restaurant.description = jsonObject.getString("description");
             restaurant.street = jsonObject.getString("street");
             restaurant.cityId = jsonObject.getInt("city_id");
             restaurant.city = jsonObject.getString("city");
             restaurant.rating = jsonObject.getInt("rating");
-            restaurant.openHours = getOpenHours(jsonObject.getJSONObject("open"));
             restaurant.promoPhotos = getPromoPhotos(jsonObject.getJSONObject("promo_foto"));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -62,5 +63,24 @@ public class RestaurantFactory {
         ArrayList<String> photoURLs = new ArrayList<>();
         photoURLs.add(photos.getString("380x200"));
         return photoURLs;
+    }
+
+    public static Restaurant restaurantDetailsFromJSON(JSONObject jsonObject) {
+        Restaurant restaurant = new Restaurant();
+        try {
+            restaurant.id = jsonObject.getInt("restaurant_id");
+            restaurant.name = jsonObject.getString("name");
+            restaurant.description = jsonObject.getString("description");
+            restaurant.street = jsonObject.getString("street");
+            restaurant.cityId = jsonObject.getInt("city_id");
+            restaurant.city = jsonObject.getString("city");
+            restaurant.rating = jsonObject.getInt("rating");
+            restaurant.openHours = getOpenHours(jsonObject.getJSONObject("open"));
+            restaurant.promoPhotos = getPromoPhotos(jsonObject.getJSONObject("promo_foto"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return restaurant;
     }
 }
