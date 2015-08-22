@@ -42,7 +42,7 @@ public class CitiesActivity extends AppCompatActivity {
                 finish();
             }
         });
-        cities = null;
+        cities = MainActivity.cities;
     }
 
     @Override

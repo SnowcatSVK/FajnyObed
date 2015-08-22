@@ -24,6 +24,9 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.snowcat.fajnyobed.Logic.City;
+import com.snowcat.fajnyobed.Logic.CityAdapter;
+import com.snowcat.fajnyobed.Logic.CityFactory;
 import com.snowcat.fajnyobed.Logic.Restaurant;
 import com.snowcat.fajnyobed.Logic.RestaurantAdapter;
 import com.snowcat.fajnyobed.Logic.RestaurantFactory;
@@ -43,6 +46,7 @@ public class MainActivity extends ActionBarActivity {
     private ArrayList<Restaurant> restaurants;
     private ArrayAdapter<Restaurant> restaurantsAdapter;
     private ListView restaurantListView;
+    public static ArrayList<City> cities;
     private int cityID = 0;
     private LocationManager lm;
 
@@ -59,7 +63,7 @@ public class MainActivity extends ActionBarActivity {
         config.tasksProcessingOrder(QueueProcessingType.LIFO);
         config.writeDebugLogs(); // Remove for release app
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
+        cities = null;
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config.build());
     }
@@ -90,6 +94,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         /*{"function":"GetRestaurantDetail","restaurant_id":"4884"}*/
+        getCities();
         try {
             if (cityID == 0)
                 initPosition();
@@ -130,6 +135,34 @@ public class MainActivity extends ActionBarActivity {
         }.execute();
     }
 
+    public void getCities() {
+        new AsyncTask<Void, Void, Void>() {
+            SecureDataClient client = new SecureDataClient();
+            JSONObject request = new JSONObject();
+            JSONObject jsonObject = null;
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                String response = null;
+                try {
+                    request.put("function", "GetCityList");
+                    response = client.createRetriever().execute(request);
+                    jsonObject = new JSONObject(response);
+                    Log.e("response", jsonObject.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                cities = CityFactory.fromJSON(jsonObject);
+            }
+        }.execute();
+    }
+
     public void initPosition() throws IOException {
         if (!lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && !lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             // Build the alert dialog
@@ -161,8 +194,16 @@ public class MainActivity extends ActionBarActivity {
                 Log.e("Poloha", "" + gps[0] + ";" + gps[1]);
                 Geocoder gcd = new Geocoder(this, Locale.getDefault());
                 List<Address> addresses = gcd.getFromLocation(gps[0], gps[1], 1);
-                if (addresses.size() > 0)
-                    Log.e("Mesto", addresses.get(0).getLocality());
+                if (addresses.size() > 0) {
+                    String mesto = addresses.get(0).getLocality();
+                    Log.e("Mesto", mesto);
+                    for (City city : cities) {
+                        if (city.name.equalsIgnoreCase(mesto)) {
+                            cityID = city.id;
+                            getRestaurants(cityID);
+                        }
+                    }
+                }
             } else {
                 Log.e("MapInit", "nieto GPS");
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
