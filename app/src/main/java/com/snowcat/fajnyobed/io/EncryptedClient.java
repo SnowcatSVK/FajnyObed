@@ -2,19 +2,15 @@ package com.snowcat.fajnyobed.io;
 
 import android.util.Log;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -36,14 +32,11 @@ import javax.crypto.spec.SecretKeySpec;
 public class EncryptedClient {
     private static final String LOG_TAG = "com.antik.tv.base";
 
-    DefaultHttpClient httpClient;
+    //DefaultHttpClient httpClient;
 
     String password;
     MessageDigest digest;
     SecretKeySpec key;
-
-    int timeoutConnection = 4000;
-    int timeoutSocket = 15000;
 
     public EncryptedClient(String password) {
         this.password = password;
@@ -63,15 +56,15 @@ public class EncryptedClient {
         this.key = new SecretKeySpec(key, "AES");
         //Log.e("kluc",HexHelper.toString(key));
 
-        HttpParams httpParameters = new BasicHttpParams();
+        //HttpParams httpParameters = new BasicHttpParams();
 // Set the timeout in milliseconds until a connection is established.
 // The default value is zero, that means the timeout is not used.
-        HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+        //HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
 // Set the default socket timeout (SO_TIMEOUT)
 // in milliseconds which is the timeout for waiting for data.
-        HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+        //HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
-        httpClient = new DefaultHttpClient(httpParameters);
+        //httpClient = new DefaultHttpClient(httpParameters);
     }
 
 
@@ -90,8 +83,7 @@ public class EncryptedClient {
             cipher.init(Cipher.DECRYPT_MODE, getKey(), new IvParameterSpec(iv));
 
             CipherInputStream gis = new CipherInputStream(stream, cipher);
-            InputStream inflaterInputStream = new InflaterInputStream(gis);
-            return inflaterInputStream;
+            return new InflaterInputStream(gis);
         } catch (Exception e) {
             Log.e(LOG_TAG, "request error", e);
         }
@@ -101,28 +93,35 @@ public class EncryptedClient {
     public InputStream execute(Request r) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException {
 
 
-        r.httppost = new HttpPost(r.uri);
+        //r.httppost = new HttpPost(r.uri);
 
         byte[] iv = new byte[16];
                 /*String string = "4297bfa44cc40ef1a6988a8115f7d82f";
                 iv = HexHelper.toByteArray(string);*/
         //Log.e("IV dlzka", "" + iv.length);
         //iv = string.getBytes("UTF-8");
+
+        URL url = new URL(r.uri);
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        BufferedInputStream returnInputStream;
+        urlConnection.setDoOutput(true);
         new Random().nextBytes(iv);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        BufferedOutputStream byteArrayOutputStream = new BufferedOutputStream(urlConnection.getOutputStream());
         byteArrayOutputStream.write(iv);
 
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        //Log.e("KeyMD5", getKey().toString());
+        Log.e("SHA256_Encrypted", getKey().toString());
         cipher.init(Cipher.ENCRYPT_MODE, getKey(), new IvParameterSpec(iv));
         OutputStream outputStream = new CipherOutputStream(byteArrayOutputStream, cipher);
         DeflaterOutputStream compressedStream = new DeflaterOutputStream(outputStream);
         compressedStream.write(r.request.getBytes());
         compressedStream.close();
+        returnInputStream = new BufferedInputStream(getDataInputStream(urlConnection.getInputStream()));
+        //urlConnection.disconnect();
 
-        byte[] data = byteArrayOutputStream.toByteArray();
+        //byte[] data = byteArrayOutputStream.toByteArray();
 
-        r.httppost.setEntity(new ByteArrayEntity(data));
+        //r.httppost.setEntity(new ByteArrayEntity(data));
 
                 /*if (r.gzipData) {
                     ByteArrayInputStream test = new ByteArrayInputStream(data);
@@ -131,9 +130,9 @@ public class EncryptedClient {
                     Log.v("DATA: ", reader.readLine() + String.valueOf(data[16]));
                 }*/
 
-        HttpResponse httpResponse = httpClient.execute(r.httppost);
+        //HttpResponse httpResponse = httpClient.execute(r.httppost);
         //Log.e("httpResponse",httpResponse.getEntity().getContent().toString());
-        return getDataInputStream(httpResponse.getEntity().getContent());
+        return returnInputStream;
     }
 
     private int writeShort(OutputStream out, int i) throws IOException {
@@ -156,7 +155,7 @@ public class EncryptedClient {
         String uri;
         String request;
         boolean gzipData;
-        HttpPost httppost;
+        //HttpPost httppost;
 
         public Request(String uri, String request, boolean gzipData) {
             this.uri = uri;
@@ -164,10 +163,6 @@ public class EncryptedClient {
             this.gzipData = gzipData;
         }
 
-        public void cancel() {
-            if (httppost != null)
-                httppost.abort();
-            Log.v("ABORTING", "ABORTING");
-        }
+
     }
 }

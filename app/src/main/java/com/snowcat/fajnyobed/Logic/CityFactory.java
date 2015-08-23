@@ -14,12 +14,9 @@ public class CityFactory {
 
     public static ArrayList<City> fromJSON(JSONObject jsonObject) {
         ArrayList<City> cities = new ArrayList<>(jsonObject.length());
-        Log.e("restaurantJSON", jsonObject.toString());
-        Log.e("restaurantJSON",""+jsonObject.length());
         for (int i = 0; i < jsonObject.length()-1; i++) {
             JSONObject cityJson = null;
             try {
-                Log.e("restaurantJSON", "" + jsonObject.getJSONObject(""+String.valueOf(i)).toString());
                 cityJson = jsonObject.getJSONObject(""+i);
             } catch (JSONException e) {
                 e.printStackTrace();

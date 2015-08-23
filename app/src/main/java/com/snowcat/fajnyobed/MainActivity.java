@@ -30,6 +30,8 @@ import com.snowcat.fajnyobed.Logic.CityFactory;
 import com.snowcat.fajnyobed.Logic.Restaurant;
 import com.snowcat.fajnyobed.Logic.RestaurantAdapter;
 import com.snowcat.fajnyobed.Logic.RestaurantFactory;
+import com.snowcat.fajnyobed.io.RequestHandler;
+import com.snowcat.fajnyobed.io.SHA_256;
 import com.snowcat.fajnyobed.io.SecureDataClient;
 
 import org.json.JSONException;
@@ -49,6 +51,7 @@ public class MainActivity extends ActionBarActivity {
     public static ArrayList<City> cities;
     private int cityID = 0;
     private LocationManager lm;
+    private RequestHandler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,8 @@ public class MainActivity extends ActionBarActivity {
         cities = null;
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config.build());
+        String passwordHash = SHA_256.getHashString("VFZN!7y5yiu#2&c0WBgUFajnyObedofOqtA4W%HO1snf+TLtw");
+        handler = new RequestHandler("http://api.fajnyobed.sk", passwordHash);
     }
 
     @Override
@@ -94,7 +99,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         /*{"function":"GetRestaurantDetail","restaurant_id":"4884"}*/
-        getCities();
+        if (cities == null)
+            getCities();
         try {
             if (cityID == 0)
                 initPosition();
@@ -106,22 +112,12 @@ public class MainActivity extends ActionBarActivity {
 
     public void getRestaurants(final int id) {
         new AsyncTask<Void, Void, Void>() {
-            SecureDataClient client = new SecureDataClient();
-            JSONObject request = new JSONObject();
             JSONObject jsonObject = null;
 
             @Override
             protected Void doInBackground(Void... params) {
-                String response = null;
-                try {
-                    request.put("function", "GetRestaurantListByCity");
-                    request.put("city_id", "" + id);
-                    response = client.createRetriever().execute(request);
-                    jsonObject = new JSONObject(response);
-                    Log.e("response", jsonObject.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                jsonObject = handler.handleRequest("GetRestaurantListByCity", String.valueOf(id), null);
+                Log.e("response", jsonObject.toString());
                 return null;
             }
 
@@ -137,17 +133,13 @@ public class MainActivity extends ActionBarActivity {
 
     public void getCities() {
         new AsyncTask<Void, Void, Void>() {
-            SecureDataClient client = new SecureDataClient();
-            JSONObject request = new JSONObject();
             JSONObject jsonObject = null;
 
             @Override
             protected Void doInBackground(Void... params) {
                 String response = null;
                 try {
-                    request.put("function", "GetCityList");
-                    response = client.createRetriever().execute(request);
-                    jsonObject = new JSONObject(response);
+                    jsonObject = handler.handleRequest("GetCityList", null, null);
                     Log.e("response", jsonObject.toString());
                 } catch (Exception e) {
                     e.printStackTrace();

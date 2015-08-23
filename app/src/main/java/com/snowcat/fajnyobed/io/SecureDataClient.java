@@ -109,8 +109,7 @@ public class SecureDataClient implements IDataClient {
 
         @Override
         public void cancel() {
-            if (request != null)
-                request.cancel();
+
         }
     }
 }
