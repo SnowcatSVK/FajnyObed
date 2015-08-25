@@ -13,11 +13,18 @@ import android.os.AsyncTask;
 import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -38,25 +45,31 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 
 public class MainActivity extends ActionBarActivity {
-    TextView textView;
+    private EditText searchEditText;
     private ArrayList<Restaurant> restaurants;
     private ArrayAdapter<Restaurant> restaurantsAdapter;
+    private ArrayList<Restaurant> searchResults;
     private ListView restaurantListView;
     public static ArrayList<City> cities;
     private int cityID = 0;
     private LocationManager lm;
     private RequestHandler handler;
+    ProgressBar progressBar;
+    private boolean isSearchOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         restaurantListView = (ListView) findViewById(R.id.restaurant_listView);
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
         config.threadPriority(Thread.NORM_PRIORITY - 2);
@@ -71,6 +84,45 @@ public class MainActivity extends ActionBarActivity {
         ImageLoader.getInstance().init(config.build());
         String passwordHash = SHA_256.getHashString("VFZN!7y5yiu#2&c0WBgUFajnyObedofOqtA4W%HO1snf+TLtw");
         handler = new RequestHandler("http://api.fajnyobed.sk", passwordHash);
+        progressBar = (ProgressBar) findViewById(R.id.restaurant_progressBar);
+        searchEditText = (EditText)findViewById(R.id.search_editText);
+
+        searchEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (view.getId() == R.id.search_editText && !b) {
+
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+                }
+            }
+        });
+        restaurantListView.requestFocus();
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                search(charSequence, restaurantListView);
+                if (charSequence.length() >= 1) {
+                    isSearchOn = true;
+                } else {
+                    isSearchOn = false;
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        searchEditText.clearFocus();
     }
 
     @Override
@@ -88,9 +140,7 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -101,13 +151,25 @@ public class MainActivity extends ActionBarActivity {
         /*{"function":"GetRestaurantDetail","restaurant_id":"4884"}*/
         if (cities == null)
             getCities();
-        try {
-            if (cityID == 0)
-                initPosition();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        restaurantListView.requestFocus();
 
+    }
+
+    public void search(CharSequence charSequence, ListView listView) {
+        searchResults = new ArrayList<>();
+        String caseOne;
+        String caseTwo;
+        String sequence = Normalizer.normalize(charSequence, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").replaceAll("\\s+", "").toLowerCase();
+        for (Restaurant restaurant : restaurants) {
+            caseOne = Normalizer.normalize(restaurant.name, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").replaceAll("\\s+", "");
+            caseTwo = Normalizer.normalize(restaurant.name, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").replaceAll("\\s+", "").toLowerCase();
+            if ((caseOne.equalsIgnoreCase(sequence)) || (caseTwo.contains(sequence)))
+                searchResults.add(restaurant);
+
+        }
+        restaurantsAdapter = new RestaurantAdapter(this,searchResults);
+        restaurantsAdapter.notifyDataSetChanged();
+        listView.setAdapter(restaurantsAdapter);
     }
 
     public void getRestaurants(final int id) {
@@ -127,6 +189,7 @@ public class MainActivity extends ActionBarActivity {
                 restaurants = RestaurantFactory.fromJSON(jsonObject);
                 restaurantsAdapter = new RestaurantAdapter(MainActivity.this, restaurants);
                 restaurantListView.setAdapter(restaurantsAdapter);
+                progressBar.setVisibility(View.GONE);
             }
         }.execute();
     }
@@ -137,7 +200,6 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             protected Void doInBackground(Void... params) {
-                String response = null;
                 try {
                     jsonObject = handler.handleRequest("GetCityList", null, null);
                     Log.e("response", jsonObject.toString());
@@ -151,6 +213,12 @@ public class MainActivity extends ActionBarActivity {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 cities = CityFactory.fromJSON(jsonObject);
+                try {
+                    if (cityID == 0)
+                        initPosition();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }.execute();
     }
