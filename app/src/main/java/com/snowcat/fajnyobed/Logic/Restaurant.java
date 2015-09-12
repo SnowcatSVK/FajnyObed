@@ -1,20 +1,5 @@
 package com.snowcat.fajnyobed.Logic;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.ImageView;
-
-import com.snowcat.fajnyobed.MainActivity;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -31,5 +16,6 @@ public class Restaurant {
     public int rating;
     public ArrayList<String> openHours;
     public ArrayList<String> promoPhotos;
+    public ArrayList<DailyMenu> menus;
 
 }

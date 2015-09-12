@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -39,9 +40,7 @@ import com.snowcat.fajnyobed.Logic.RestaurantAdapter;
 import com.snowcat.fajnyobed.Logic.RestaurantFactory;
 import com.snowcat.fajnyobed.io.RequestHandler;
 import com.snowcat.fajnyobed.io.SHA_256;
-import com.snowcat.fajnyobed.io.SecureDataClient;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -60,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
     public static ArrayList<City> cities;
     private int cityID = 0;
     private LocationManager lm;
-    private RequestHandler handler;
+    public static RequestHandler handler;
     ProgressBar progressBar;
     private boolean isSearchOn = false;
 
@@ -69,7 +68,6 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         restaurantListView = (ListView) findViewById(R.id.restaurant_listView);
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
         config.threadPriority(Thread.NORM_PRIORITY - 2);
@@ -112,6 +110,9 @@ public class MainActivity extends ActionBarActivity {
                     isSearchOn = true;
                 } else {
                     isSearchOn = false;
+                    restaurantsAdapter = new RestaurantAdapter(MainActivity.this,restaurants);
+                    restaurantsAdapter.notifyDataSetChanged();
+                    restaurantListView.setAdapter(restaurantsAdapter);
 
                 }
             }
@@ -123,6 +124,20 @@ public class MainActivity extends ActionBarActivity {
         });
 
         searchEditText.clearFocus();
+        restaurantListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this,RestaurantActivity.class);
+                String restaurantId;
+                if (isSearchOn) {
+                    restaurantId = String.valueOf(searchResults.get(position).id);
+                } else {
+                    restaurantId = String.valueOf(restaurants.get(position).id);
+                }
+                intent.putExtra("restaurant_id",restaurantId);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

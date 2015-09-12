@@ -15,11 +15,11 @@ public class RestaurantFactory {
 
     public static ArrayList<Restaurant> fromJSON(JSONObject jsonObject) {
         ArrayList<Restaurant> restaurants = new ArrayList<>(jsonObject.length());
-        for (int i = 0; i < jsonObject.length()-1; i++) {
+        for (int i = 0; i < jsonObject.length() - 1; i++) {
             JSONObject restaurantJson = null;
             try {
-                Log.e("restaurantJSON", "" + jsonObject.getJSONObject(""+String.valueOf(i)).toString());
-                restaurantJson = jsonObject.getJSONObject(""+i);
+                Log.e("restaurantJSON", "" + jsonObject.getJSONObject("" + String.valueOf(i)).toString());
+                restaurantJson = jsonObject.getJSONObject("" + i);
             } catch (JSONException e) {
                 e.printStackTrace();
                 continue;
@@ -54,7 +54,7 @@ public class RestaurantFactory {
         openHours.add(hours.getString("wed"));
         openHours.add(hours.getString("thu"));
         openHours.add(hours.getString("fri"));
-        openHours.add(hours.getString("sat"));
+        openHours.add(hours.getString("sta"));
         openHours.add(hours.getString("sun"));
         return openHours;
     }
@@ -77,10 +77,34 @@ public class RestaurantFactory {
             restaurant.rating = jsonObject.getInt("rating");
             restaurant.openHours = getOpenHours(jsonObject.getJSONObject("open"));
             restaurant.promoPhotos = getPromoPhotos(jsonObject.getJSONObject("promo_foto"));
-
+            restaurant.menus = getDailyMenus(jsonObject.optJSONArray("daily_menu"));
+            Log.e("Zbehol", "RestaurantDetail");
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return restaurant;
+    }
+
+    public static ArrayList<DailyMenu> getDailyMenus(JSONArray menusJSONArray) {
+        if (menusJSONArray != null) {
+            ArrayList<DailyMenu> dailyMenus
+                    = new ArrayList<>();
+            for (int i = 0; i < menusJSONArray.length(); i++) {
+                DailyMenu menu = new DailyMenu();
+                try {
+                    JSONObject menuJSON = menusJSONArray.getJSONObject(i);
+                    menu.date = menuJSON.getString("date");
+                    menu.dateString = menuJSON.getString("date_string");
+                    menu.groups = MenuFactory.menuFromJSON(menuJSON.getJSONArray("menu"));
+                    dailyMenus.add(menu);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            Log.e("Zbehol", "DailyMenus");
+            return dailyMenus;
+        }
+        return null;
     }
 }

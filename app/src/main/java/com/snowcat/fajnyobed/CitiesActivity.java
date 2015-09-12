@@ -50,13 +50,16 @@ public class CitiesActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
-                intent.putExtra("ID", cities.get(position).id);
+                if (isSearchOn)
+                    intent.putExtra("ID", searchResults.get(position).id);
+                else
+                    intent.putExtra("ID", cities.get(position).id);
                 setResult(RESULT_OK, intent);
                 finish();
             }
         });
         cities = MainActivity.cities;
-        searchEditText = (EditText)findViewById(R.id.search_editText);
+        searchEditText = (EditText) findViewById(R.id.search_editText);
 
         searchEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -83,6 +86,9 @@ public class CitiesActivity extends AppCompatActivity {
                     isSearchOn = true;
                 } else {
                     isSearchOn = false;
+                    cityAdapter = new CityAdapter(CitiesActivity.this, cities);
+                    cityAdapter.notifyDataSetChanged();
+                    cityListView.setAdapter(cityAdapter);
 
                 }
             }
@@ -127,7 +133,7 @@ public class CitiesActivity extends AppCompatActivity {
                 searchResults.add(city);
 
         }
-        cityAdapter = new CityAdapter(this,searchResults);
+        cityAdapter = new CityAdapter(this, searchResults);
         cityAdapter.notifyDataSetChanged();
         listView.setAdapter(cityAdapter);
     }
