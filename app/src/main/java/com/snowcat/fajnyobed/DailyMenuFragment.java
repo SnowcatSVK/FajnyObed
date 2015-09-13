@@ -40,13 +40,13 @@ public class DailyMenuFragment extends Fragment {
             menuList.expandGroup(i);
         }
         menuList.setGroupIndicator(null);
-        menuList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+       /* menuList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 menuList.expandGroup(groupPosition);
                 return true;
             }
-        });
+        });*/
         return rootView;
     }
 }

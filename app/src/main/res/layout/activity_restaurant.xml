@@ -1,58 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.snowcat.fajnyobed.RestaurantActivity">
 
-    <ImageView
-        android:id="@+id/restaurant_imageView"
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/image"
-        android:elevation="3dp"/>
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#9000"
-        android:layout_alignBottom="@+id/restaurant_imageView"
-        android:paddingLeft="16dp"
-        android:paddingStart="16dp"
-        android:elevation="3dp">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/restaurant_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <TextView
-            android:id="@+id/restaurant_name_textView"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:text="Restauracia Rokoko"
-            android:textColor="#fff"
-            android:textSize="24sp" />
+            android:elevation="3dp">
 
-        <TextView
-            android:id="@+id/restaurant_address_textView"
-            android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/restaurant_imageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/image"
+                android:elevation="3dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/restaurant_imageView"
+                android:background="#9000"
+                android:elevation="4dp"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
+                android:paddingRight="16dp"
+                android:paddingEnd="16dp">
+
+                <TextView
+                    android:id="@+id/restaurant_name_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Restauracia Rokoko"
+                    android:textColor="#fff"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/restaurant_address_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/restaurant_name_textView"
+                    android:fontFamily="sans-serif-thin"
+                    android:text="Gorkeho 9"
+                    android:textColor="#fff"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tablayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/restaurant_name_textView"
-            android:fontFamily="sans-serif-thin"
-            android:text="Gorkeho 9"
-            android:textColor="#fff"
-            android:textSize="18sp" />
-    </RelativeLayout>
+            android:layout_below="@+id/restaurant_imageView" />
+    </android.support.design.widget.AppBarLayout>
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tablayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/restaurant_imageView"
-        />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/restaurant_viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tablayout" />
+        android:layout_below="@+id/appBarLayout" />
 
 
 </RelativeLayout>
