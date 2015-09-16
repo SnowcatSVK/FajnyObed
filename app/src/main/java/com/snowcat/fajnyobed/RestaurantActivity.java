@@ -77,11 +77,14 @@ public class RestaurantActivity extends AppCompatActivity {
             for (DailyMenu menu : restaurant.menus) {
                 adapter.addFrag(new DailyMenuFragment(), menu.dateString, menu.groups);
                 i++;
-                if (i==3)
-                    break;
+                //if (i==3)
+                //break;
             }
             viewPager.setAdapter(adapter);
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
+            tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+            if (restaurant.menus.size() > 3)
+                tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
             tabLayout.setupWithViewPager(viewPager);
         }
 
