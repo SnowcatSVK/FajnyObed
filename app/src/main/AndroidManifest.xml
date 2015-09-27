@@ -35,7 +35,7 @@
         </activity>
 
         <provider
-            android:name=".Database.FajnyObedContentProvider"
+            android:name=".database.FajnyObedContentProvider"
             android:authorities="com.snowcat.fajnyobed.android.contentprovider" />
 
     </application>

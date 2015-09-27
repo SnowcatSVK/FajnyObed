@@ -29,7 +29,7 @@ import com.snowcat.fajnyobed.Logic.DailyMenu;
 import com.snowcat.fajnyobed.Logic.FoodGroup;
 import com.snowcat.fajnyobed.Logic.Restaurant;
 import com.snowcat.fajnyobed.Logic.RestaurantFactory;
-import com.snowcat.fajnyobed.Database.FajnyObedDatabaseHelper;
+import com.snowcat.fajnyobed.database.FajnyObedDatabaseHelper;
 
 import org.json.JSONObject;
 

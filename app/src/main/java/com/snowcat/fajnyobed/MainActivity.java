@@ -42,8 +42,8 @@ import com.snowcat.fajnyobed.Logic.FavouritesCursorAdapter;
 import com.snowcat.fajnyobed.Logic.Restaurant;
 import com.snowcat.fajnyobed.Logic.RestaurantAdapter;
 import com.snowcat.fajnyobed.Logic.RestaurantFactory;
-import com.snowcat.fajnyobed.Database.FajnyObedContentProvider;
-import com.snowcat.fajnyobed.Database.FavouritesTable;
+import com.snowcat.fajnyobed.database.FajnyObedContentProvider;
+import com.snowcat.fajnyobed.database.FavouritesTable;
 import com.snowcat.fajnyobed.io.RequestHandler;
 import com.snowcat.fajnyobed.io.SHA_256;
 
