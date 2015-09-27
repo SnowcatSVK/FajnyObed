@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingEnd="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingStart="16dp"
-    android:paddingTop="16dp">
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/restaurant"
@@ -17,19 +13,18 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingStart="16dp"
-        android:paddingRight="16dp"
         android:paddingEnd="16dp"
-        android:weightSum="3">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingStart="16dp">
 
         <TextView
             android:id="@+id/restaurant_list_name_textView"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:text="Hokejka Pub"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -37,15 +32,13 @@
         <TextView
             android:id="@+id/restaurant_list_place_textView"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:text="Gerlachovská 19"
             android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/restaurant_list_stars_imageView"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </LinearLayout>

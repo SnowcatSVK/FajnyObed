@@ -33,7 +33,6 @@
                 android:layout_height="wrap_content"
                 android:background="#fff"
                 android:hint="Hladať"
-                android:textColorHint="?attr/colorAccent"
                 android:textColor="#9000"
                 android:padding="5dp"
                 android:textSize="22sp" />
@@ -57,6 +56,30 @@
         android:layout_centerInParent="true"
         android:indeterminate="true"
         android:progressTint="?attr/colorPrimary" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:elevation="4dp"
+        app:borderWidth="0dp"
+        android:onClick="onFabClick"
+        android:src="@drawable/ic_favorite" />
+
+    <RelativeLayout
+        android:id="@+id/layout_root_favourites"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:elevation="6dp"/>
 
 
 </RelativeLayout>

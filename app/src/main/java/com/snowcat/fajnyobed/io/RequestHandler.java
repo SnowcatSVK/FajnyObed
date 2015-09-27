@@ -98,6 +98,9 @@ public class RequestHandler {
                         case "GetRestaurantListByCity":
                             jsonObject.put("city_id", param);
                             break;
+                        case "GetMenu":
+                            jsonObject.put("restaurant_id", param);
+                            break;
                     }
 
                 }

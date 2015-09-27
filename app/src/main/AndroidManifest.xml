@@ -33,6 +33,11 @@
         </activity>
         <activity android:name=".RestaurantActivity" >
         </activity>
+
+        <provider
+            android:name=".database.FajnyObedContentProvider"
+            android:authorities="com.snowcat.fajnyobed.android.contentprovider" />
+
     </application>
 
 </manifest>

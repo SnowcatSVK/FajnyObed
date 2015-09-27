@@ -37,12 +37,15 @@ import java.util.List;
 
 public class RestaurantActivity extends AppCompatActivity {
 
-    private Restaurant restaurant;
+    public static Restaurant restaurant;
     private DisplayImageOptions options;
     private ImageView promoPhoto;
     private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
     private TextView restaurantNameTextView;
     private TextView restauratAddressTextView;
+    private MenuFragment menuFragment;
+    private boolean fragmentPresent = false;
+    private boolean menuSet = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,22 @@ public class RestaurantActivity extends AppCompatActivity {
         super.onResume();
         Intent intent = getIntent();
         getRestaurantDetails(intent.getStringExtra("restaurant_id"));
+    }
+
+    public void onFabClick(View v) {
+        if (fragmentPresent) {
+            getSupportFragmentManager().beginTransaction()
+                    .hide(menuFragment).commit();
+            fragmentPresent = false;
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .show(menuFragment).commit();
+            fragmentPresent = true;
+            if (!menuSet) {
+                menuFragment.getMenu(String.valueOf(restaurant.id));
+                menuSet = true;
+            }
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -110,6 +129,10 @@ public class RestaurantActivity extends AppCompatActivity {
                 setupViewPager(viewPager);
                 restaurantNameTextView.setText(restaurant.name);
                 restauratAddressTextView.setText(restaurant.street);
+                menuFragment = new MenuFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.root_layout, menuFragment)
+                        .hide(menuFragment).commit();
             }
         }.execute();
     }
@@ -159,6 +182,17 @@ public class RestaurantActivity extends AppCompatActivity {
                     displayedImages.add(imageUri);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (fragmentPresent) {
+            getSupportFragmentManager().beginTransaction()
+                    .hide(menuFragment).commit();
+            fragmentPresent = false;
+        } else {
+            super.onBackPressed();
         }
     }
 }

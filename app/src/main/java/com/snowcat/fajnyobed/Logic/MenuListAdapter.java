@@ -1,6 +1,8 @@
 package com.snowcat.fajnyobed.Logic;
 
 import android.content.Context;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,8 +68,11 @@ public class MenuListAdapter extends BaseExpandableListAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.item_group, null);
         }
+        String udata=groups.get(groupPosition).groupName;
+        SpannableString content = new SpannableString(udata);
+        content.setSpan(new UnderlineSpan(), 0, udata.length(), 0);
         TextView textView = (TextView) convertView.findViewById(R.id.group_name_textView);
-        textView.setText(groups.get(groupPosition).groupName);
+        textView.setText(udata);
         return convertView;
     }
 
