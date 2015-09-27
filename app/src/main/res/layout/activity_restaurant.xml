@@ -21,7 +21,7 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <RelativeLayout
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="3dp">
@@ -34,11 +34,13 @@
                 android:elevation="3dp" />
 
             <LinearLayout
+                android:id="@+id/description_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/restaurant_imageView"
                 android:background="#9000"
                 android:elevation="4dp"
+                app:layout_anchor="@id/restaurant_imageView"
+                app:layout_anchorGravity="bottom|right|end"
                 android:orientation="vertical"
                 android:paddingEnd="16dp"
                 android:paddingLeft="16dp"
@@ -65,7 +67,19 @@
                     android:textSize="18sp" />
             </LinearLayout>
 
-        </RelativeLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_anchor="@id/description_layout"
+                app:layout_anchorGravity="top|right|end"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:onClick="onFabClick"
+                android:src="@drawable/ic_menu" />
+
+        </android.support.design.widget.CoordinatorLayout>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tablayout"
@@ -82,17 +96,7 @@
         android:layout_below="@+id/appBarLayout" />
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/appBarLayout"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="76dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:onClick="onFabClick"
-        android:src="@drawable/ic_menu" />
+
 
     <RelativeLayout
         android:id="@+id/root_layout"

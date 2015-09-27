@@ -13,6 +13,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,9 +29,11 @@ import com.snowcat.fajnyobed.Logic.DailyMenu;
 import com.snowcat.fajnyobed.Logic.FoodGroup;
 import com.snowcat.fajnyobed.Logic.Restaurant;
 import com.snowcat.fajnyobed.Logic.RestaurantFactory;
+import com.snowcat.fajnyobed.Database.FajnyObedDatabaseHelper;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -46,6 +50,7 @@ public class RestaurantActivity extends AppCompatActivity {
     private MenuFragment menuFragment;
     private boolean fragmentPresent = false;
     private boolean menuSet = false;
+    FajnyObedDatabaseHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +67,7 @@ public class RestaurantActivity extends AppCompatActivity {
         promoPhoto = (ImageView) findViewById(R.id.restaurant_imageView);
         restaurantNameTextView = (TextView) findViewById(R.id.restaurant_name_textView);
         restauratAddressTextView = (TextView) findViewById(R.id.restaurant_address_textView);
-
-
+        helper = new FajnyObedDatabaseHelper(this);
     }
 
     @Override
@@ -71,6 +75,27 @@ public class RestaurantActivity extends AppCompatActivity {
         super.onResume();
         Intent intent = getIntent();
         getRestaurantDetails(intent.getStringExtra("restaurant_id"));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_restaurant, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_addFavourite) {
+            helper.addFavourite(restaurant);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void onFabClick(View v) {
@@ -115,7 +140,11 @@ public class RestaurantActivity extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void... params) {
-                jsonObject = MainActivity.handler.handleRequest("GetRestaurantDetail", restaurantId, null);
+                try {
+                    jsonObject = MainActivity.handler.handleRequest("GetRestaurantDetail", restaurantId, null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Log.e("response", jsonObject.toString());
                 return null;
             }

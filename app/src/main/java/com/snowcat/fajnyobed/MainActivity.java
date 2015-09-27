@@ -2,17 +2,22 @@ package com.snowcat.fajnyobed;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.provider.Settings;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,18 +31,19 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.snowcat.fajnyobed.Logic.City;
-import com.snowcat.fajnyobed.Logic.CityAdapter;
 import com.snowcat.fajnyobed.Logic.CityFactory;
+import com.snowcat.fajnyobed.Logic.FavouritesCursorAdapter;
 import com.snowcat.fajnyobed.Logic.Restaurant;
 import com.snowcat.fajnyobed.Logic.RestaurantAdapter;
 import com.snowcat.fajnyobed.Logic.RestaurantFactory;
+import com.snowcat.fajnyobed.Database.FajnyObedContentProvider;
+import com.snowcat.fajnyobed.Database.FavouritesTable;
 import com.snowcat.fajnyobed.io.RequestHandler;
 import com.snowcat.fajnyobed.io.SHA_256;
 
@@ -50,7 +56,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private EditText searchEditText;
     private ArrayList<Restaurant> restaurants;
     private ArrayAdapter<Restaurant> restaurantsAdapter;
@@ -62,6 +68,9 @@ public class MainActivity extends ActionBarActivity {
     public static RequestHandler handler;
     ProgressBar progressBar;
     private boolean isSearchOn = false;
+    private FavouritesFragment favouritesFragment;
+    public static FavouritesCursorAdapter adapter;
+    private boolean favouritesPresent = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +92,7 @@ public class MainActivity extends ActionBarActivity {
         String passwordHash = SHA_256.getHashString("VFZN!7y5yiu#2&c0WBgUFajnyObedofOqtA4W%HO1snf+TLtw");
         handler = new RequestHandler("http://api.fajnyobed.sk", passwordHash);
         progressBar = (ProgressBar) findViewById(R.id.restaurant_progressBar);
-        searchEditText = (EditText)findViewById(R.id.search_editText);
+        searchEditText = (EditText) findViewById(R.id.search_editText);
 
         searchEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -110,7 +119,7 @@ public class MainActivity extends ActionBarActivity {
                     isSearchOn = true;
                 } else {
                     isSearchOn = false;
-                    restaurantsAdapter = new RestaurantAdapter(MainActivity.this,restaurants);
+                    restaurantsAdapter = new RestaurantAdapter(MainActivity.this, restaurants);
                     restaurantsAdapter.notifyDataSetChanged();
                     restaurantListView.setAdapter(restaurantsAdapter);
 
@@ -127,17 +136,25 @@ public class MainActivity extends ActionBarActivity {
         restaurantListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this,RestaurantActivity.class);
+                Intent intent = new Intent(MainActivity.this, RestaurantActivity.class);
                 String restaurantId;
                 if (isSearchOn) {
                     restaurantId = String.valueOf(searchResults.get(position).id);
                 } else {
                     restaurantId = String.valueOf(restaurants.get(position).id);
                 }
-                intent.putExtra("restaurant_id",restaurantId);
+                intent.putExtra("restaurant_id", restaurantId);
                 startActivity(intent);
             }
         });
+        getLoaderManager().initLoader(0, null, this);
+        adapter = new FavouritesCursorAdapter(this, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        favouritesFragment = new FavouritesFragment();
+        getSupportFragmentManager().beginTransaction().
+                add(R.id.layout_root_favourites, favouritesFragment)
+                .show(favouritesFragment)
+                .hide(favouritesFragment)
+                .commit();
     }
 
     @Override
@@ -158,6 +175,20 @@ public class MainActivity extends ActionBarActivity {
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onFabClick(View v) {
+        if (favouritesPresent) {
+            getSupportFragmentManager().beginTransaction()
+                    .hide(favouritesFragment)
+                    .commit();
+            favouritesPresent = false;
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .show(favouritesFragment)
+                    .commit();
+            favouritesPresent = true;
+        }
     }
 
     @Override
@@ -182,7 +213,7 @@ public class MainActivity extends ActionBarActivity {
                 searchResults.add(restaurant);
 
         }
-        restaurantsAdapter = new RestaurantAdapter(this,searchResults);
+        restaurantsAdapter = new RestaurantAdapter(this, searchResults);
         restaurantsAdapter.notifyDataSetChanged();
         listView.setAdapter(restaurantsAdapter);
     }
@@ -193,7 +224,11 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             protected Void doInBackground(Void... params) {
-                jsonObject = handler.handleRequest("GetRestaurantListByCity", String.valueOf(id), null);
+                try {
+                    jsonObject = handler.handleRequest("GetRestaurantListByCity", String.valueOf(id), null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Log.e("response", jsonObject.toString());
                 return null;
             }
@@ -340,4 +375,25 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projectionHistory = new String[]{FavouritesTable.COLUMN_ID, FavouritesTable.COLUMN_RESTAURANT_NAME,
+                FavouritesTable.COLUMN_RESTAURANT_PLACE, FavouritesTable.COLUMN_RESTAURANT_ID
+        };
+        return new CursorLoader(this, FajnyObedContentProvider.CONTENT_URI_FAVOURITE,
+                projectionHistory, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        adapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        adapter.swapCursor(null);
+    }
+
+
 }

@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -56,13 +57,13 @@ public class RequestHandler {
         return key;
     }
 
-    public JSONObject handleRequest(String function, String param, String param2) {
+    public JSONObject handleRequest(String function, String param, String param2) throws IOException{
         JSONObject returnJSON;
         try {
             urlConnection = (HttpURLConnection) apiUrl.openConnection();
             urlConnection.setDoOutput(true);
             urlConnection.setDoOutput(true);
-
+            urlConnection.setConnectTimeout(10000);
             byte[] iv = new byte[16];
             new Random().nextBytes(iv);
             BufferedOutputStream byteArrayOutputStream = new BufferedOutputStream(urlConnection.getOutputStream());
@@ -76,7 +77,7 @@ public class RequestHandler {
             compressedStream.close();
             return new JSONObject(convertStreamToString(getDataInputStream(urlConnection.getInputStream())));
 
-        } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | IOException | JSONException e) {
+        } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | JSONException e) {
             e.printStackTrace();
         }
         return null;
@@ -131,7 +132,7 @@ public class RequestHandler {
 
     }
 
-    private InputStream getDataInputStream(InputStream stream) {
+    private InputStream getDataInputStream(InputStream stream) throws IOException{
         byte[] iv = new byte[16];
         try {
             stream.read(iv, 0, 16);
@@ -143,8 +144,8 @@ public class RequestHandler {
 
             CipherInputStream gis = new CipherInputStream(stream, cipher);
             return new InflaterInputStream(gis);
-        } catch (Exception e) {
-            Log.e("com.snowcat.fajnyObed", "request error", e);
+        } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
         }
         return null;
     }

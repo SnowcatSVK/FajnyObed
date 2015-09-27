@@ -16,9 +16,11 @@ import com.snowcat.fajnyobed.Logic.FoodGroup;
 import com.snowcat.fajnyobed.Logic.MenuFactory;
 import com.snowcat.fajnyobed.Logic.MenuListAdapter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -56,7 +58,11 @@ public class MenuFragment extends Fragment {
 
             @Override
             protected Void doInBackground(Void... params) {
-                jsonObject = MainActivity.handler.handleRequest("GetMenu", restaurantId, null);
+                try {
+                    jsonObject = MainActivity.handler.handleRequest("GetMenu", restaurantId, null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Log.e("response", jsonObject.toString());
                 return null;
             }
@@ -66,13 +72,16 @@ public class MenuFragment extends Fragment {
                 super.onPostExecute(aVoid);
                 bar.setVisibility(View.INVISIBLE);
                 try {
-                    ArrayList<FoodGroup> groups = MenuFactory.menuFromJSON(jsonObject.optJSONArray("menu"));
-                    adapter = new MenuListAdapter(getActivity(), groups);
-                    menuList.setAdapter(adapter);
-                    for (int i = 0; i < groups.size(); i++) {
-                        menuList.expandGroup(i);
+                    JSONArray array = jsonObject.optJSONArray("menu");
+                    if (array != null) {
+                        ArrayList<FoodGroup> groups = MenuFactory.menuFromJSON(array);
+                        adapter = new MenuListAdapter(getActivity(), groups);
+                        menuList.setAdapter(adapter);
+                        for (int i = 0; i < groups.size(); i++) {
+                            menuList.expandGroup(i);
+                        }
+                        menuList.setGroupIndicator(null);
                     }
-                    menuList.setGroupIndicator(null);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

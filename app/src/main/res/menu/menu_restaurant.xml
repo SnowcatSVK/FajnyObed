@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".RestaurantActivity">
+
+    <item
+        android:id="@+id/action_addFavourite"
+        android:icon="@drawable/ic_favorite"
+        android:title="Obľúbené"
+        android:orderInCategory="0"
+        app:showAsAction="always" />
+
+</menu>
