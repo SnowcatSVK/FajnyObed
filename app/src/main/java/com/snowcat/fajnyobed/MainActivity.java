@@ -76,7 +76,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         restaurantListView = (ListView) findViewById(R.id.restaurant_listView);
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
         config.threadPriority(Thread.NORM_PRIORITY - 2);
@@ -155,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 .show(favouritesFragment)
                 .hide(favouritesFragment)
                 .commit();
+
     }
 
     @Override
@@ -188,6 +191,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     .show(favouritesFragment)
                     .commit();
             favouritesPresent = true;
+            favouritesFragment.favouritesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String restaurantId = MainActivity.adapter.getRestaurantId(position);
+                    Intent i = new Intent(MainActivity.this, RestaurantActivity.class);
+                    i.putExtra("restaurant_id", restaurantId);
+                    startActivity(i);
+                    getSupportFragmentManager().beginTransaction()
+                            .hide(favouritesFragment)
+                            .commit();
+                }
+            });
         }
     }
 

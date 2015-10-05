@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_red"
+    tools:context="com.snowcat.fajnyobed.SplashScreenActivity">
+
+    <ImageView
+        android:id="@+id/logo_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:elevation="4dp"
+        android:src="@drawable/boot_pic"
+        android:background="?attr/colorPrimaryDark"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@drawable/shadow"
+        android:layout_below="@+id/logo_image"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ikona_boot"
+        android:id="@+id/imageView" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_above="@+id/imageView"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

@@ -65,6 +65,7 @@ public class RestaurantActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurant);
         Toolbar toolbar = (Toolbar) findViewById(R.id.restaurant_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
@@ -125,11 +126,6 @@ public class RestaurantActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_addFavourite) {
-            helper.addFavourite(restaurant);
-        }
 
         switch (id) {
             case R.id.action_addFavourite:

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_silver"
     tools:context=".MainActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -17,8 +18,12 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
-            android:padding="8dp"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/boot_pic"/>
+        </android.support.v7.widget.Toolbar>
 
         <RelativeLayout
             android:id="@+id/search_layout"
@@ -65,9 +70,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="24dp"
-        android:layout_marginEnd="42dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="42dp"
+        android:layout_marginRight="16dp"
         android:layout_marginStart="16dp" />
 
     <android.support.design.widget.FloatingActionButton

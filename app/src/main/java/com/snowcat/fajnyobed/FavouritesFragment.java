@@ -16,6 +16,7 @@ import android.widget.ListView;
  */
 public class FavouritesFragment extends Fragment {
 
+    public ListView favouritesList;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -27,17 +28,9 @@ public class FavouritesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_favourites, container, false);
-        ListView favouritesList = (ListView) rootView.findViewById(R.id.favourites_listView);
+        favouritesList = (ListView) rootView.findViewById(R.id.favourites_listView);
         favouritesList.setAdapter(MainActivity.adapter);
-        favouritesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String restaurantId = MainActivity.adapter.getRestaurantId(position);
-                Intent i = new Intent(getActivity(), RestaurantActivity.class);
-                i.putExtra("restaurant_id", restaurantId);
-                startActivity(i);
-            }
-        });
+
         return rootView;
     }
 

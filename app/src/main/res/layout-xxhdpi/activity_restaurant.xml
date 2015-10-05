@@ -20,12 +20,11 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark">
-
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" >
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/boot_pic" />
+                android:src="@drawable/boot_pic"/>
         </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.CoordinatorLayout
@@ -59,7 +58,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:text="Restauracia Rokoko"
                     android:textColor="#fff"
                     android:textSize="24sp" />
 
@@ -69,7 +67,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/restaurant_name_textView"
                     android:fontFamily="sans-serif-thin"
-                    android:text="Gorkeho 9"
                     android:textColor="#fff"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -96,7 +93,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/appBarLayout"
-        android:background="?attr/colorPrimary" />
+        android:background="?attr/colorPrimary"
+        app:tabSelectedTextColor="#fff"
+        app:tabTextColor="#fff" />
 
 
     <android.support.v4.view.ViewPager

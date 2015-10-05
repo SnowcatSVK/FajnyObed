@@ -43,6 +43,7 @@ public class CitiesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cities);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.city_toolbar);
         setSupportActionBar((Toolbar) findViewById(R.id.city_toolbar));
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         cityListView = (ListView) findViewById(R.id.cities_listView);
