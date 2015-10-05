@@ -3,8 +3,10 @@ package com.snowcat.fajnyobed;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,9 +15,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,7 +33,7 @@ import com.snowcat.fajnyobed.Logic.DailyMenu;
 import com.snowcat.fajnyobed.Logic.FoodGroup;
 import com.snowcat.fajnyobed.Logic.Restaurant;
 import com.snowcat.fajnyobed.Logic.RestaurantFactory;
-import com.snowcat.fajnyobed.database.FajnyObedDatabaseHelper;
+import com.snowcat.fajnyobed.Database.FajnyObedDatabaseHelper;
 
 import org.json.JSONObject;
 
@@ -48,9 +52,12 @@ public class RestaurantActivity extends AppCompatActivity {
     private TextView restaurantNameTextView;
     private TextView restauratAddressTextView;
     private MenuFragment menuFragment;
+    private DetailsFragment detailsFragment;
     private boolean fragmentPresent = false;
     private boolean menuSet = false;
+    private boolean detailsPresent = false;
     FajnyObedDatabaseHelper helper;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +75,34 @@ public class RestaurantActivity extends AppCompatActivity {
         restaurantNameTextView = (TextView) findViewById(R.id.restaurant_name_textView);
         restauratAddressTextView = (TextView) findViewById(R.id.restaurant_address_textView);
         helper = new FajnyObedDatabaseHelper(this);
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        final int width = size.x;
+        int height = size.y;
+        ViewGroup.LayoutParams lp = promoPhoto.getLayoutParams();
+        lp.height = (width / 16) * 9;
+        lp.width = width;
+        promoPhoto.setLayoutParams(lp);
+        fab = (FloatingActionButton) findViewById(R.id.restaurant_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fragmentPresent) {
+                    getSupportFragmentManager().beginTransaction()
+                            .hide(menuFragment).commit();
+                    fragmentPresent = false;
+                } else {
+                    getSupportFragmentManager().beginTransaction()
+                            .show(menuFragment).commit();
+                    fragmentPresent = true;
+                    if (!menuSet) {
+                        menuFragment.getMenu(String.valueOf(restaurant.id));
+                        menuSet = true;
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -95,24 +130,26 @@ public class RestaurantActivity extends AppCompatActivity {
         if (id == R.id.action_addFavourite) {
             helper.addFavourite(restaurant);
         }
+
+        switch (id) {
+            case R.id.action_addFavourite:
+                helper.addFavourite(restaurant);
+                break;
+            case R.id.action_info:
+                if (!detailsPresent) {
+                    getFragmentManager().beginTransaction()
+                            .show(detailsFragment).commit();
+                    detailsPresent = true;
+                } else {
+                    getFragmentManager().beginTransaction()
+                            .hide(detailsFragment).commit();
+                    detailsPresent = false;
+                }
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
-    public void onFabClick(View v) {
-        if (fragmentPresent) {
-            getSupportFragmentManager().beginTransaction()
-                    .hide(menuFragment).commit();
-            fragmentPresent = false;
-        } else {
-            getSupportFragmentManager().beginTransaction()
-                    .show(menuFragment).commit();
-            fragmentPresent = true;
-            if (!menuSet) {
-                menuFragment.getMenu(String.valueOf(restaurant.id));
-                menuSet = true;
-            }
-        }
-    }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -162,6 +199,10 @@ public class RestaurantActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.root_layout, menuFragment)
                         .hide(menuFragment).commit();
+                detailsFragment = new DetailsFragment();
+                getFragmentManager().beginTransaction()
+                        .add(R.id.restaurant_info_root, detailsFragment)
+                        .hide(detailsFragment).commit();
             }
         }.execute();
     }

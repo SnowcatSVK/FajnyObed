@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context="com.snowcat.fajnyobed.DetailsFragment"
+    android:background="#fff">
+
+    <TextView
+        android:id="@+id/open_hours_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:text="OTVÁRACIE"
+        android:textColor="?attr/colorPrimaryDark"
+        android:textSize="22sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/open_hours_textView"
+        android:text="HODINY"
+        android:textColor="?attr/colorPrimaryDark"
+        android:textSize="22sp" />
+
+    <ListView
+        android:id="@+id/open_hours_listView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/open_hours_textView"
+        android:layout_toRightOf="@id/open_hours_textView"
+        android:divider="@android:color/transparent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:dividerHeight="0dp"/>
+
+</RelativeLayout>

@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.snowcat.fajnyobed.MenuFragment"
-    android:background="#fff">
+    android:background="@drawable/outline">
 
     <ExpandableListView
         android:id="@+id/restaurant_big_menu_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"/>
 

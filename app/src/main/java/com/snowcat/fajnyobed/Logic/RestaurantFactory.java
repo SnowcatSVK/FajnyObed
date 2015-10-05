@@ -49,13 +49,20 @@ public class RestaurantFactory {
 
     public static ArrayList<String> getOpenHours(JSONObject hours) throws JSONException {
         ArrayList<String> openHours = new ArrayList<>();
-        openHours.add(hours.getString("mon"));
-        openHours.add(hours.getString("tue"));
-        openHours.add(hours.getString("wed"));
-        openHours.add(hours.getString("thu"));
-        openHours.add(hours.getString("fri"));
-        openHours.add(hours.getString("sta"));
-        openHours.add(hours.getString("sun"));
+        String pondelok = "Pondelok:  " + hours.getString("mon");
+        String utorok = "Utorok:  " + hours.getString("tue");
+        String streda = "Streda:  " + hours.getString("wed");
+        String stvrtok = "Štvrtok:  " + hours.getString("thu");
+        String piatok = "Piatok:  " + hours.getString("fri");
+        String sobota = "Sobota:  " + hours.getString("sta");
+        String nedela = "Nedela:  " + hours.getString("sun");
+        openHours.add(pondelok);
+        openHours.add(utorok);
+        openHours.add(streda);
+        openHours.add(stvrtok);
+        openHours.add(piatok);
+        openHours.add(sobota);
+        openHours.add(nedela);
         return openHours;
     }
 

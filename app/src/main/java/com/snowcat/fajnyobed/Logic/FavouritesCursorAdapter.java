@@ -15,7 +15,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.snowcat.fajnyobed.R;
-import com.snowcat.fajnyobed.database.FavouritesTable;
+import com.snowcat.fajnyobed.Database.FavouritesTable;
 
 import java.util.Collections;
 import java.util.LinkedList;

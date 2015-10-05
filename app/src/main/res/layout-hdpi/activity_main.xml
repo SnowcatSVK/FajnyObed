@@ -59,14 +59,16 @@
 
     <RelativeLayout
         android:id="@+id/layout_root_favourites"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/fab"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="40dp"
-        android:layout_marginEnd="52dp"
-        android:layout_marginRight="52dp"/>
+        android:layout_marginBottom="24dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="42dp"
+        android:layout_marginRight="42dp"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
