@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return super.onOptionsItemSelected(item);
     }
 
-    public void onFabClick(View v) {
+    public void onMainFabClick(View v) {
         if (favouritesPresent) {
             getSupportFragmentManager().beginTransaction()
                     .hide(favouritesFragment)

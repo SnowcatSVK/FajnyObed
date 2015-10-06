@@ -66,7 +66,7 @@ public class MenuListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.item_group, null);
+            convertView = infalInflater.inflate(R.layout.item_group, parent, false);
         }
         String udata=groups.get(groupPosition).groupName;
         SpannableString content = new SpannableString(udata);
@@ -83,7 +83,7 @@ public class MenuListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.item_food, null);
+            convertView = infalInflater.inflate(R.layout.item_food, parent, false);
         }
         TextView nameTextView = (TextView) convertView.findViewById(R.id.food_name_textView);
         nameTextView.setText(foodName);

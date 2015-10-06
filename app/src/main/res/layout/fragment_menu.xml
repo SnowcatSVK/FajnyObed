@@ -9,8 +9,8 @@
         android:id="@+id/restaurant_big_menu_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="2dp"
         android:paddingBottom="2dp"
+        android:paddingTop="2dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"/>
 

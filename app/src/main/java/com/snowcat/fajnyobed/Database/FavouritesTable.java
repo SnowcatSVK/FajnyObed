@@ -1,4 +1,4 @@
-package com.snowcat.fajnyobed.Database;
+package com.snowcat.fajnyobed.database;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
