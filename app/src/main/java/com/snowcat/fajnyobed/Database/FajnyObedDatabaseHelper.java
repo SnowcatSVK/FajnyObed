@@ -1,4 +1,4 @@
-package com.snowcat.fajnyobed.database;
+package com.snowcat.fajnyobed.Database;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;

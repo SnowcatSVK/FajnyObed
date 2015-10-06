@@ -14,6 +14,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.provider.Settings;
 import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
@@ -25,12 +26,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -71,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private FavouritesFragment favouritesFragment;
     public static FavouritesCursorAdapter adapter;
     private boolean favouritesPresent = false;
+    RelativeLayout layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         config.tasksProcessingOrder(QueueProcessingType.LIFO);
         config.writeDebugLogs(); // Remove for release app
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        layout = (RelativeLayout) findViewById(R.id.layout_root_favourites);
         cities = null;
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config.build());
@@ -175,21 +181,37 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-
+        switch (id) {
+            case R.id.action_change_city:
+                Intent intent = new Intent(MainActivity.this, CitiesActivity.class);
+                startActivityForResult(intent, 2);
+                break;
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
     public void onMainFabClick(View v) {
         if (favouritesPresent) {
-            getSupportFragmentManager().beginTransaction()
-                    .hide(favouritesFragment)
-                    .commit();
-            favouritesPresent = false;
+            Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
+            layout.startAnimation(animation);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getSupportFragmentManager().beginTransaction()
+                            .hide(favouritesFragment)
+                            .commit();
+                    favouritesPresent = false;
+                }
+            },200);
+
         } else {
             getSupportFragmentManager().beginTransaction()
                     .show(favouritesFragment)
                     .commit();
+            Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_in);
+            layout.startAnimation(animation);
             favouritesPresent = true;
             favouritesFragment.favouritesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -201,6 +223,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     getSupportFragmentManager().beginTransaction()
                             .hide(favouritesFragment)
                             .commit();
+                    favouritesPresent = false;
                 }
             });
         }
@@ -289,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     public void initPosition() throws IOException {
-        if (!lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && !lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (!lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || !lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             // Build the alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Poloha");

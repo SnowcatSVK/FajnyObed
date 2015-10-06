@@ -11,29 +11,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:elevation="4dp"
-        android:src="@drawable/boot_pic"
-        android:background="?attr/colorPrimaryDark"/>
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="64dp"
+        android:background="@drawable/gradient_bg"
+        android:src="@drawable/boot_bg" />
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@drawable/shadow"
-        android:layout_below="@+id/logo_image"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo_image"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/shadow" />
+    </LinearLayout>
+
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ikona_boot"
-        android:id="@+id/imageView" />
+        android:src="@drawable/ikona_boot" />
 
     <ProgressBar
+        android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
         android:layout_above="@+id/imageView"
         android:layout_centerHorizontal="true" />
 

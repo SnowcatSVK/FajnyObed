@@ -24,7 +24,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/boot_pic"/>
+                android:src="@drawable/boot_bg"/>
         </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.CoordinatorLayout

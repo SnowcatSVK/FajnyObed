@@ -7,16 +7,34 @@
     tools:context="com.snowcat.fajnyobed.SplashScreenActivity">
 
     <ImageView
+        android:id="@+id/logo_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:elevation="4dp"
-        android:src="@drawable/boot_pic"
-        android:background="?attr/colorPrimaryDark"/>
+        android:layout_marginTop="64dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/boot_bg"
+        android:background="@drawable/gradient_bg"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo_image"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/shadow" />
+    </LinearLayout>
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="260dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:src="@drawable/ikona_boot"

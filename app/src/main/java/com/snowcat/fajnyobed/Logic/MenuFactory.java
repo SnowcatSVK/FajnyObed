@@ -20,7 +20,7 @@ public class MenuFactory {
             Food food = new Food();
 
             food.foodName = foodObject.getString("name");
-            food.foodPrice = foodObject.getDouble("price");
+            food.foodPrice = foodObject.optDouble("price",0.0);
             if (foodObject.isNull("category")) {
                 Log.e("Zbehol", "category je null");
                 food.foodType = null;
