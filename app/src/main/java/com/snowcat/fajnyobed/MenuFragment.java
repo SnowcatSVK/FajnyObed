@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 
 import com.snowcat.fajnyobed.Logic.FoodGroup;
@@ -32,6 +33,8 @@ public class MenuFragment extends Fragment {
     public MenuListAdapter adapter;
     public ExpandableListView menuList;
     private ProgressBar bar;
+    private ArrayList<FoodGroup> groups;
+    private boolean foodDescPresent;
 
     public MenuFragment() {
         // Required empty public constructor
@@ -43,6 +46,12 @@ public class MenuFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_menu, container, false);
         menuList = (ExpandableListView) rootView.findViewById(R.id.restaurant_big_menu_list);
         bar = (ProgressBar) rootView.findViewById(R.id.big_menu_progressBar);
+        menuList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                return true;
+            }
+        });
         return rootView;
     }
 
@@ -74,7 +83,7 @@ public class MenuFragment extends Fragment {
                 try {
                     JSONArray array = jsonObject.optJSONArray("menu");
                     if (array != null) {
-                        ArrayList<FoodGroup> groups = MenuFactory.menuFromJSON(array);
+                        groups = MenuFactory.menuFromJSON(array);
                         adapter = new MenuListAdapter(getActivity(), groups);
                         menuList.setAdapter(adapter);
                         for (int i = 0; i < groups.size(); i++) {

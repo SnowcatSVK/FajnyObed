@@ -20,16 +20,21 @@ public class MenuFactory {
             Food food = new Food();
 
             food.foodName = foodObject.getString("name");
-            food.foodPrice = foodObject.optDouble("price",0.0);
+            food.foodPrice = foodObject.optDouble("price", 0.0);
+            food.desc = foodObject.optString("description",null);
+            if (food.desc != null && food.desc.length()<2) {
+                Log.e("Food desc", food.desc + " bude null");
+                food.desc = null;
+            }
             if (foodObject.isNull("category")) {
-                Log.e("Zbehol", "category je null");
+                //Log.e("Zbehol", "category je null");
                 food.foodType = null;
             } else {
                 food.foodType = foodObject.getString("category");
             }
             meals.add(food);
         }
-        Log.e("Zbehol", "MenuFactoryMenuFromJSON");
+        //Log.e("Zbehol", "MenuFactoryMenuFromJSON");
         return createGroups(meals);
     }
 
@@ -37,7 +42,7 @@ public class MenuFactory {
         ArrayList<FoodGroup> groups = new ArrayList<>();
         for (Food food : meals) {
             if (food.foodType != null) {
-                Log.e("Zbehol", food.foodType);
+                //Log.e("Zbehol", food.foodType);
                 if (groups.size() == 0) {
                     FoodGroup group = new FoodGroup();
                     group.groupName = food.foodType;
@@ -69,7 +74,7 @@ public class MenuFactory {
             group.meals = meals;
             groups.add(group);
         }
-        Log.e("Zbehol", "MenuFactoryCreateGroups");
+        //Log.e("Zbehol", "MenuFactoryCreateGroups");
         return groups;
     }
 }

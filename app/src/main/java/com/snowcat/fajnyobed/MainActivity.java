@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     public void initPosition() throws IOException {
-        if (!lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || !lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (!lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             // Build the alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Poloha");
@@ -349,6 +349,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         if (city.name.equalsIgnoreCase(mesto)) {
                             cityID = city.id;
                             getRestaurants(cityID);
+                            break;
                         }
                     }
                 }

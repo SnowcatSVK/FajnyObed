@@ -68,7 +68,7 @@ public class MenuListAdapter extends BaseExpandableListAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.item_group, parent, false);
         }
-        String udata=groups.get(groupPosition).groupName;
+        String udata = groups.get(groupPosition).groupName;
         SpannableString content = new SpannableString(udata);
         content.setSpan(new UnderlineSpan(), 0, udata.length(), 0);
         TextView textView = (TextView) convertView.findViewById(R.id.group_name_textView);
@@ -80,16 +80,33 @@ public class MenuListAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         String foodName = ((Food) getChild(groupPosition, childPosition)).foodName;
         double foodPrice = ((Food) getChild(groupPosition, childPosition)).foodPrice;
-        if (convertView == null) {
+        String description = ((Food) getChild(groupPosition, childPosition)).desc;
+        if (description != null && description.equalsIgnoreCase("null"))
+            description = null;
+        if (description != null) {
             LayoutInflater infalInflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.item_food, parent, false);
+
+            TextView nameTextView = (TextView) convertView.findViewById(R.id.food_name_textView);
+            nameTextView.setText(foodName);
+            TextView priceTextView = (TextView) convertView.findViewById(R.id.food_price_textView);
+            if (foodPrice > 0)
+                priceTextView.setText(String.valueOf(foodPrice) + "€");
+            TextView desc = (TextView) convertView.findViewById(R.id.food_description_textView);
+            desc.setText(description);
+        } else {
+            LayoutInflater infalInflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infalInflater.inflate(R.layout.item_food_no_desc, parent, false);
+            TextView nameTextView = (TextView) convertView.findViewById(R.id.food_name_textView);
+            nameTextView.setText(foodName);
+            TextView priceTextView = (TextView) convertView.findViewById(R.id.food_price_textView);
+            if (foodPrice > 0)
+                priceTextView.setText(String.valueOf(foodPrice) + "€");
         }
-        TextView nameTextView = (TextView) convertView.findViewById(R.id.food_name_textView);
-        nameTextView.setText(foodName);
-        TextView priceTextView = (TextView) convertView.findViewById(R.id.food_price_textView);
-        if (foodPrice > 0)
-            priceTextView.setText(String.valueOf(foodPrice) + "€");
+
+
         return convertView;
     }
 

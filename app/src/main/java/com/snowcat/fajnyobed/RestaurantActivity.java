@@ -270,13 +270,14 @@ public class RestaurantActivity extends AppCompatActivity {
         if (fragmentPresent) {
             Animation animation = AnimationUtils.loadAnimation(RestaurantActivity.this, R.anim.fade_out);
             layout.startAnimation(animation);
+            fragmentPresent = false;
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     getSupportFragmentManager().beginTransaction()
                             .hide(menuFragment).commit();
-                    fragmentPresent = false;
+
                 }
             }, 500);
 
