@@ -37,6 +37,7 @@ public class CitiesActivity extends AppCompatActivity {
     public ListView cityListView;
     private EditText searchEditText;
     private boolean isSearchOn;
+    private boolean fromSplash;
 
 
     @Override
@@ -44,22 +45,36 @@ public class CitiesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cities);
         Toolbar toolbar = (Toolbar) findViewById(R.id.city_toolbar);
-        setSupportActionBar((Toolbar) findViewById(R.id.city_toolbar));
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        Intent extra = getIntent();
+        fromSplash = extra.getBooleanExtra("from_splash",false);
         cityListView = (ListView) findViewById(R.id.cities_listView);
         cityListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent();
-                if (isSearchOn)
-                    intent.putExtra("ID", searchResults.get(position).id);
-                else
-                    intent.putExtra("ID", cities.get(position).id);
-                setResult(RESULT_OK, intent);
-                finish();
+                if (!fromSplash) {
+                    Intent intent = new Intent();
+                    if (isSearchOn)
+                        intent.putExtra("ID", searchResults.get(position).id);
+                    else
+                        intent.putExtra("ID", cities.get(position).id);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(CitiesActivity.this,MainActivity.class);
+                    intent.putExtra("cities",cities);
+                    if (isSearchOn)
+                        intent.putExtra("ID", searchResults.get(position).id);
+                    else
+                        intent.putExtra("ID", cities.get(position).id);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
-        cities = MainActivity.cities;
+
+        cities = (ArrayList<City>) extra.getSerializableExtra("cities");
         searchEditText = (EditText) findViewById(R.id.search_editText);
 
         searchEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
