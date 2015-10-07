@@ -1,5 +1,6 @@
 package com.snowcat.fajnyobed.Logic;
 
+import android.text.Html;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -20,6 +21,7 @@ public class MenuFactory {
             Food food = new Food();
 
             food.foodName = foodObject.getString("name");
+            food.foodName = Html.fromHtml(food.foodName).toString();
             food.foodPrice = foodObject.optDouble("price", 0.0);
             food.desc = foodObject.optString("description",null);
             if (food.desc != null && food.desc.length()<2) {
@@ -31,6 +33,7 @@ public class MenuFactory {
                 food.foodType = null;
             } else {
                 food.foodType = foodObject.getString("category");
+                food.foodType = Html.fromHtml(food.foodType).toString();
             }
             meals.add(food);
         }
