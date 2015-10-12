@@ -181,6 +181,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_change_city:
+                isSearchOn = false;
+                searchEditText.setText("");
                 Intent intent = new Intent(MainActivity.this, CitiesActivity.class);
                 intent.putExtra("city_name", cityName);
                 startActivityForResult(intent, 2);
