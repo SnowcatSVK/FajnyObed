@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -34,7 +35,7 @@ public class MenuFragment extends Fragment {
     public ExpandableListView menuList;
     private ProgressBar bar;
     private ArrayList<FoodGroup> groups;
-    private boolean foodDescPresent;
+    private ImageView sadView;
 
     public MenuFragment() {
         // Required empty public constructor
@@ -52,6 +53,7 @@ public class MenuFragment extends Fragment {
                 return true;
             }
         });
+        sadView = (ImageView) rootView.findViewById(R.id.sad_imageView);
         return rootView;
     }
 
@@ -89,7 +91,10 @@ public class MenuFragment extends Fragment {
                         for (int i = 0; i < groups.size(); i++) {
                             menuList.expandGroup(i);
                         }
+                        sadView.setVisibility(View.GONE);
                         menuList.setGroupIndicator(null);
+                    } else {
+                        sadView.setVisibility(View.VISIBLE);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public static FavouritesCursorAdapter adapter;
     private boolean favouritesPresent = false;
     RelativeLayout layout;
+    private String cityName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         layout = (RelativeLayout) findViewById(R.id.layout_root_favourites);
         Intent extra = getIntent();
         cities = (ArrayList<City>) extra.getSerializableExtra("cities");
-        cityID = extra.getIntExtra("ID", 0);
+        cityID = extra.getIntExtra("ID", 1);
+        for (City city : cities) {
+            if (city.id == cityID) {
+                cityName = city.name;
+            }
+        }
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config.build());
         String passwordHash = SHA_256.getHashString("VFZN!7y5yiu#2&c0WBgUFajnyObedofOqtA4W%HO1snf+TLtw");
@@ -132,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-        searchEditText.clearFocus();
+
         restaurantListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -176,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         switch (id) {
             case R.id.action_change_city:
                 Intent intent = new Intent(MainActivity.this, CitiesActivity.class);
+                intent.putExtra("city_name", cityName);
                 startActivityForResult(intent, 2);
                 break;
         }
@@ -228,7 +235,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         /*if (cities == null)
             getCities();
             */
+        searchEditText.clearFocus();
         restaurantListView.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
 
     }
 
@@ -252,6 +262,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void getRestaurants(final int id) {
         new AsyncTask<Void, Void, Void>() {
             JSONObject jsonObject = null;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressBar.setVisibility(View.VISIBLE);
+            }
 
             @Override
             protected Void doInBackground(Void... params) {
@@ -281,6 +297,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (resultCode == RESULT_OK) {
             if (requestCode == 2) {
                 cityID = data.getIntExtra("ID", 1);
+                for (City city : cities) {
+                    if (city.id == cityID) {
+                        cityName = city.name;
+                        break;
+                    }
+                }
                 getRestaurants(cityID);
             }
         } else {

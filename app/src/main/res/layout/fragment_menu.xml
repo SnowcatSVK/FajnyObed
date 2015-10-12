@@ -21,13 +21,13 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
-    <TextView
-        android:id="@+id/food_description_textView"
+    <ImageView
+        android:id="@+id/sad_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_margin="16dp"
-        android:background="@drawable/outline"
-        android:visibility="gone"/>
+        android:layout_margin="100dp"
+        android:visibility="gone"
+        android:src="@drawable/sad_face"/>
 
 </RelativeLayout>

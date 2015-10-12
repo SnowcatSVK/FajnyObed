@@ -27,7 +27,8 @@
         <activity
             android:name=".CitiesActivity"
             android:label="@string/title_activity_cities"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

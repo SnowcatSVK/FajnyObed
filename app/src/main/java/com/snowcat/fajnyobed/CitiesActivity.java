@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.snowcat.fajnyobed.Logic.City;
 import com.snowcat.fajnyobed.Logic.CityAdapter;
@@ -38,6 +39,7 @@ public class CitiesActivity extends AppCompatActivity {
     private EditText searchEditText;
     private boolean isSearchOn;
     private boolean fromSplash;
+    private TextView cityTextView;
 
 
     @Override
@@ -73,9 +75,14 @@ public class CitiesActivity extends AppCompatActivity {
                 }
             }
         });
-
+        cityTextView = (TextView) findViewById(R.id.city_textView);
         cities = (ArrayList<City>) extra.getSerializableExtra("cities");
-        searchEditText = (EditText) findViewById(R.id.search_editText);
+        if (fromSplash) {
+            cityTextView.setText("Vyberte mesto");
+        } else {
+            cityTextView.setText(extra.getStringExtra("city_name"));
+        }
+        searchEditText = (EditText) findViewById(R.id.city_search_editText);
 
         searchEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -88,7 +95,7 @@ public class CitiesActivity extends AppCompatActivity {
                 }
             }
         });
-
+        cityListView.requestFocus();
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -189,5 +196,10 @@ public class CitiesActivity extends AppCompatActivity {
             cityAdapter = new CityAdapter(CitiesActivity.this, cities);
             cityListView.setAdapter(cityAdapter);
         }
+
+        //searchEditText.clearFocus();
+        cityListView.requestFocus();
+        //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        //imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
     }
 }

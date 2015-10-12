@@ -68,7 +68,9 @@ public class RestaurantFactory {
 
     public static ArrayList<String> getPromoPhotos(JSONObject photos) throws JSONException {
         ArrayList<String> photoURLs = new ArrayList<>();
+        photoURLs.add(photos.getString("200x200"));
         photoURLs.add(photos.getString("380x200"));
+        photoURLs.add(photos.getString("1440x900"));
         return photoURLs;
     }
 

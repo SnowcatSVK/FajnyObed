@@ -39,6 +39,8 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
+                .resetViewBeforeLoading(true)
+                .showImageOnLoading(getContext().getResources().getDrawable(R.drawable.sad_face_50dp))
                 .displayer(new SimpleBitmapDisplayer())
                 .build();
     }

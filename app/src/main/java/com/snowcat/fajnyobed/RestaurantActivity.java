@@ -61,6 +61,7 @@ public class RestaurantActivity extends AppCompatActivity {
     private boolean fragmentPresent = false;
     private boolean menuSet = false;
     private boolean detailsPresent = false;
+    private ImageView sadImageView;
     RelativeLayout layout;
     FajnyObedDatabaseHelper helper;
     FloatingActionButton fab;
@@ -92,7 +93,7 @@ public class RestaurantActivity extends AppCompatActivity {
         int height = size.y;
         layout = (RelativeLayout) findViewById(R.id.root_layout);
         ViewGroup.LayoutParams lp = promoPhoto.getLayoutParams();
-        lp.height = (width / 16) * 9;
+        lp.height = (width / 16) * 10;
         lp.width = width;
         promoPhoto.setLayoutParams(lp);
         fab = (FloatingActionButton) findViewById(R.id.restaurant_fab);
@@ -112,13 +113,15 @@ public class RestaurantActivity extends AppCompatActivity {
                 }
             }
         });
+        Intent intent = getIntent();
+        getRestaurantDetails(intent.getStringExtra("restaurant_id"));
+        sadImageView = (ImageView) findViewById(R.id.sadface_imageView);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Intent intent = getIntent();
-        getRestaurantDetails(intent.getStringExtra("restaurant_id"));
+
     }
 
     @Override
@@ -163,13 +166,11 @@ public class RestaurantActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
         if (restaurant.menus != null) {
-            int i = 0;
+            sadImageView.setVisibility(View.GONE);
             for (DailyMenu menu : restaurant.menus) {
-                adapter.addFrag(new DailyMenuFragment(), menu.dateString, menu.groups);
-                i++;
-                //if (i==3)
-                //break;
+                adapter.addFrag(new DailyMenuFragment(), menu.dateString, menu.groups);;
             }
             viewPager.setAdapter(adapter);
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
@@ -177,6 +178,8 @@ public class RestaurantActivity extends AppCompatActivity {
             if (restaurant.menus.size() > 3)
                 tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
             tabLayout.setupWithViewPager(viewPager);
+        } else {
+            sadImageView.setVisibility(View.VISIBLE);
         }
 
     }
@@ -200,7 +203,7 @@ public class RestaurantActivity extends AppCompatActivity {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 restaurant = RestaurantFactory.restaurantDetailsFromJSON(jsonObject);
-                ImageLoader.getInstance().displayImage(restaurant.promoPhotos.get(0), promoPhoto, options, animateFirstListener);
+                ImageLoader.getInstance().displayImage(restaurant.promoPhotos.get(2), promoPhoto, options, animateFirstListener);
                 ViewPager viewPager = (ViewPager) findViewById(R.id.restaurant_viewPager);
                 setupViewPager(viewPager);
                 restaurantNameTextView.setText(restaurant.name);

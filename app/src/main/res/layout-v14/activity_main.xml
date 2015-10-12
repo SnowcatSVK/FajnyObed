@@ -18,21 +18,22 @@
             android:layout_height="75dp"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" >
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark">
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/boot_bg"
+                android:paddingEnd="16dp"
                 android:paddingLeft="26dp"
-                android:paddingStart="26dp"
                 android:paddingRight="16dp"
-                android:paddingEnd="16dp"/>
+                android:paddingStart="26dp"
+                android:src="@drawable/boot_bg" />
         </android.support.v7.widget.Toolbar>
 
         <RelativeLayout
             android:id="@+id/search_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:elevation="4dp"
             android:padding="10dp">
 
@@ -45,9 +46,17 @@
                 android:padding="5dp"
                 android:textColor="#9000"
                 android:textSize="22sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_search" />
         </RelativeLayout>
 
     </android.support.design.widget.AppBarLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"

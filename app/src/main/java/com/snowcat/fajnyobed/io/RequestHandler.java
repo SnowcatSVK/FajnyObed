@@ -62,7 +62,6 @@ public class RequestHandler {
         try {
             urlConnection = (HttpURLConnection) apiUrl.openConnection();
             urlConnection.setDoOutput(true);
-            urlConnection.setDoOutput(true);
             urlConnection.setConnectTimeout(10000);
             byte[] iv = new byte[16];
             new Random().nextBytes(iv);
