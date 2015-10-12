@@ -21,13 +21,32 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
-    <ImageView
-        android:id="@+id/sad_imageView"
+    <LinearLayout
+        android:id="@+id/sad_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_margin="100dp"
-        android:visibility="gone"
-        android:src="@drawable/sad_face"/>
+        android:layout_margin="50dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="128dp"
+            android:src="@drawable/sad_face"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:textColor="#80AF2A34"
+            android:text="Menu nie je pre túto reštauráciu dostupné"/>
+
+    </LinearLayout>
+
 
 </RelativeLayout>

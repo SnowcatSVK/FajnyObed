@@ -35,7 +35,7 @@
             <ImageView
                 android:id="@+id/restaurant_imageView"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="225dp"
                 android:background="#fff"
                 android:elevation="3dp" />
 
@@ -104,16 +104,35 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/tablayout" />
 
-    <ImageView
-        android:id="@+id/sadface_imageView"
+    <LinearLayout
+        android:id="@+id/sadface_imageLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tablayout"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/sad_face"
-        android:layout_margin="80dp"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="99dp"
+            android:layout_height="124dp"
+            android:src="@drawable/sad_face"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="Denné menu nie je pre túto reštauráciu dostupné"
+            android:textColor="#80AF2A34"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/restaurant_info_root"

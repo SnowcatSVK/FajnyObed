@@ -56,7 +56,7 @@ public class SplashScreenActivity extends Activity {
     public void initPosition() throws IOException {
         if (!lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             final Intent intent = new Intent(SplashScreenActivity.this, CitiesActivity.class);
-            intent.putExtra("cities",cities);
+            intent.putExtra("cities", cities);
             intent.putExtra("from_splash", true);
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -78,7 +78,7 @@ public class SplashScreenActivity extends Activity {
                     for (City city : cities) {
                         if (city.name.equalsIgnoreCase(mesto)) {
                             cityID = city.id;
-                            final Intent intent = new Intent(SplashScreenActivity.this,MainActivity.class);
+                            final Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
                             intent.putExtra("ID", cityID);
                             intent.putExtra("cities", cities);
                             Handler handler = new Handler();
@@ -89,14 +89,25 @@ public class SplashScreenActivity extends Activity {
                                     finish();
                                 }
                             }, 1500);
-                            break;
+                            return;
                         }
                     }
+                    final Intent intent = new Intent(SplashScreenActivity.this, CitiesActivity.class);
+                    intent.putExtra("cities", cities);
+                    intent.putExtra("from_splash", true);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            startActivity(intent);
+                            finish();
+                        }
+                    }, 1500);
                 }
             } else {
                 Log.e("MapInit", "nieto GPS");
                 final Intent intent = new Intent(SplashScreenActivity.this, CitiesActivity.class);
-                intent.putExtra("cities",cities);
+                intent.putExtra("cities", cities);
                 intent.putExtra("from_splash", true);
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {

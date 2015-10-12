@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -35,7 +36,7 @@ public class MenuFragment extends Fragment {
     public ExpandableListView menuList;
     private ProgressBar bar;
     private ArrayList<FoodGroup> groups;
-    private ImageView sadView;
+    private LinearLayout sadView;
 
     public MenuFragment() {
         // Required empty public constructor
@@ -53,7 +54,7 @@ public class MenuFragment extends Fragment {
                 return true;
             }
         });
-        sadView = (ImageView) rootView.findViewById(R.id.sad_imageView);
+        sadView = (LinearLayout) rootView.findViewById(R.id.sad_layout);
         return rootView;
     }
 

@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -61,7 +62,7 @@ public class RestaurantActivity extends AppCompatActivity {
     private boolean fragmentPresent = false;
     private boolean menuSet = false;
     private boolean detailsPresent = false;
-    private ImageView sadImageView;
+    private LinearLayout sadImageLayout;
     RelativeLayout layout;
     FajnyObedDatabaseHelper helper;
     FloatingActionButton fab;
@@ -81,6 +82,8 @@ public class RestaurantActivity extends AppCompatActivity {
                 .cacheOnDisk(true)
                 .considerExifParams(true)
                 .displayer(new SimpleBitmapDisplayer())
+                .showImageOnLoading(getResources().getDrawable(R.drawable.boot_pic_red))
+                .showImageOnFail(getResources().getDrawable(R.drawable.boot_pic_red))
                 .build();
         promoPhoto = (ImageView) findViewById(R.id.restaurant_imageView);
         restaurantNameTextView = (TextView) findViewById(R.id.restaurant_name_textView);
@@ -115,7 +118,7 @@ public class RestaurantActivity extends AppCompatActivity {
         });
         Intent intent = getIntent();
         getRestaurantDetails(intent.getStringExtra("restaurant_id"));
-        sadImageView = (ImageView) findViewById(R.id.sadface_imageView);
+        sadImageLayout = (LinearLayout) findViewById(R.id.sadface_imageLayout);
     }
 
     @Override
@@ -150,7 +153,7 @@ public class RestaurantActivity extends AppCompatActivity {
                     detailsPresent = true;
                 } else {
                     getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.animator.slide_out,R.animator.slide_out)
+                            .setCustomAnimations(R.animator.slide_out, R.animator.slide_out)
                             .hide(detailsFragment).commit();
                     detailsPresent = false;
                 }
@@ -168,9 +171,10 @@ public class RestaurantActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         if (restaurant.menus != null) {
-            sadImageView.setVisibility(View.GONE);
+            sadImageLayout.setVisibility(View.GONE);
             for (DailyMenu menu : restaurant.menus) {
-                adapter.addFrag(new DailyMenuFragment(), menu.dateString, menu.groups);;
+                adapter.addFrag(new DailyMenuFragment(), menu.dateString, menu.groups);
+                ;
             }
             viewPager.setAdapter(adapter);
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
@@ -179,7 +183,7 @@ public class RestaurantActivity extends AppCompatActivity {
                 tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
             tabLayout.setupWithViewPager(viewPager);
         } else {
-            sadImageView.setVisibility(View.VISIBLE);
+            sadImageLayout.setVisibility(View.VISIBLE);
         }
 
     }
