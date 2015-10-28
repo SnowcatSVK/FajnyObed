@@ -104,36 +104,39 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/tablayout" />
 
-    <LinearLayout
-        android:id="@+id/sadface_imageLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tablayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:orientation="vertical"
-        android:visibility="gone">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tablayout">
 
-        <ImageView
-            android:layout_width="99dp"
-            android:layout_height="124dp"
-            android:src="@drawable/sad_face"
-            android:layout_gravity="center"
-            />
-
-        <TextView
+        <LinearLayout
+            android:id="@+id/sadface_imageLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="Denné menu nie je pre túto reštauráciu dostupné"
-            android:textColor="#80AF2A34"
-            android:textSize="20sp"/>
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:visibility="visible">
 
-    </LinearLayout>
+            <ImageView
 
+                android:layout_width="100dp"
+                android:layout_height="128dp"
+                android:layout_gravity="center"
+                android:src="@drawable/sad_face" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="Denné menu nie je pre túto reštauráciu dostupné"
+                android:textColor="#80AF2A34"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
     <RelativeLayout
         android:id="@+id/restaurant_info_root"
         android:layout_width="match_parent"
