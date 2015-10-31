@@ -1,16 +1,11 @@
 package com.snowcat.fajnyobed;
 
-import android.app.LoaderManager;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.Cursor;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Bundle;
-import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -34,12 +29,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.snowcat.fajnyobed.Logic.City;
-import com.snowcat.fajnyobed.Logic.FavouritesCursorAdapter;
 import com.snowcat.fajnyobed.Logic.Restaurant;
 import com.snowcat.fajnyobed.Logic.RestaurantAdapter;
 import com.snowcat.fajnyobed.Logic.RestaurantFactory;
-import com.snowcat.fajnyobed.Database.FajnyObedContentProvider;
-import com.snowcat.fajnyobed.Database.FavouritesTable;
 import com.snowcat.fajnyobed.io.RequestHandler;
 import com.snowcat.fajnyobed.io.SHA_256;
 
@@ -50,11 +42,12 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity {
     private EditText searchEditText;
     private ArrayList<Restaurant> restaurants;
     private ArrayAdapter<Restaurant> restaurantsAdapter;
     private ArrayList<Restaurant> searchResults;
+
     private ListView restaurantListView;
     public static ArrayList<City> cities;
     private int cityID = 0;
@@ -63,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     ProgressBar progressBar;
     private boolean isSearchOn = false;
     private FavouritesFragment favouritesFragment;
-    public static FavouritesCursorAdapter adapter;
     private boolean favouritesPresent = false;
     RelativeLayout layout;
     private String cityName;
@@ -153,8 +145,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
-        getLoaderManager().initLoader(0, null, this);
-        adapter = new FavouritesCursorAdapter(this, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         favouritesFragment = new FavouritesFragment();
         getSupportFragmentManager().beginTransaction().
                 add(R.id.layout_root_favourites, favouritesFragment)
@@ -217,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             favouritesFragment.favouritesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String restaurantId = MainActivity.adapter.getRestaurantId(position);
+                    String restaurantId = String.valueOf(favouritesFragment.favourites.get(position).id);
                     Intent i = new Intent(MainActivity.this, RestaurantActivity.class);
                     i.putExtra("restaurant_id", restaurantId);
                     startActivity(i);
@@ -241,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         restaurantListView.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+        favouritesFragment.getFavourites();
 
     }
 
@@ -313,25 +304,4 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         }
     }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String[] projectionHistory = new String[]{FavouritesTable.COLUMN_ID, FavouritesTable.COLUMN_RESTAURANT_NAME,
-                FavouritesTable.COLUMN_RESTAURANT_PLACE, FavouritesTable.COLUMN_RESTAURANT_ID
-        };
-        return new CursorLoader(this, FajnyObedContentProvider.CONTENT_URI_FAVOURITE,
-                projectionHistory, null, null, null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
-    }
-
-
 }

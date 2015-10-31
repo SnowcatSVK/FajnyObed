@@ -49,8 +49,8 @@ public class CitiesActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.city_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        Intent extra = getIntent();
-        fromSplash = extra.getBooleanExtra("from_splash",false);
+        final Intent extra = getIntent();
+        fromSplash = extra.getBooleanExtra("from_splash", false);
         cityListView = (ListView) findViewById(R.id.cities_listView);
         cityListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -64,12 +64,14 @@ public class CitiesActivity extends AppCompatActivity {
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {
-                    Intent intent = new Intent(CitiesActivity.this,MainActivity.class);
-                    intent.putExtra("cities",cities);
+                    Intent intent = new Intent(CitiesActivity.this, MainActivity.class);
+                    intent.putExtra("cities", cities);
                     if (isSearchOn)
                         intent.putExtra("ID", searchResults.get(position).id);
                     else
                         intent.putExtra("ID", cities.get(position).id);
+                    if (extra.hasExtra("favourites"))
+                        intent.putExtra("favourites", extra.getSerializableExtra("favourites"));
                     startActivity(intent);
                     finish();
                 }

@@ -18,9 +18,12 @@ import android.util.Log;
 
 import com.snowcat.fajnyobed.Logic.City;
 import com.snowcat.fajnyobed.Logic.CityFactory;
+import com.snowcat.fajnyobed.Logic.Restaurant;
+import com.snowcat.fajnyobed.Logic.RestaurantFactory;
 import com.snowcat.fajnyobed.io.RequestHandler;
 import com.snowcat.fajnyobed.io.SHA_256;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -32,6 +35,7 @@ public class SplashScreenActivity extends Activity {
 
     private LocationManager lm;
     public ArrayList<City> cities;
+    public ArrayList<Restaurant> favourites;
     private int cityID = 0;
     public RequestHandler handler;
 
@@ -42,6 +46,7 @@ public class SplashScreenActivity extends Activity {
         String passwordHash = SHA_256.getHashString("VFZN!7y5yiu#2&c0WBgUFajnyObedofOqtA4W%HO1snf+TLtw");
         handler = new RequestHandler("http://api.fajnyobed.sk", passwordHash);
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        favourites = null;
     }
 
     @Override
@@ -169,3 +174,5 @@ public class SplashScreenActivity extends Activity {
         }.execute();
     }
 }
+//Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID)
+

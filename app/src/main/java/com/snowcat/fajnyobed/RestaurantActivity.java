@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -28,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -39,8 +41,8 @@ import com.snowcat.fajnyobed.Logic.DailyMenu;
 import com.snowcat.fajnyobed.Logic.FoodGroup;
 import com.snowcat.fajnyobed.Logic.Restaurant;
 import com.snowcat.fajnyobed.Logic.RestaurantFactory;
-import com.snowcat.fajnyobed.Database.FajnyObedDatabaseHelper;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -64,7 +66,6 @@ public class RestaurantActivity extends AppCompatActivity {
     private boolean detailsPresent = false;
     private LinearLayout sadImageLayout;
     RelativeLayout layout;
-    FajnyObedDatabaseHelper helper;
     FloatingActionButton fab;
 
     @Override
@@ -88,7 +89,6 @@ public class RestaurantActivity extends AppCompatActivity {
         promoPhoto = (ImageView) findViewById(R.id.restaurant_imageView);
         restaurantNameTextView = (TextView) findViewById(R.id.restaurant_name_textView);
         restauratAddressTextView = (TextView) findViewById(R.id.restaurant_address_textView);
-        helper = new FajnyObedDatabaseHelper(this);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -143,7 +143,7 @@ public class RestaurantActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.action_addFavourite:
-                helper.addFavourite(restaurant);
+                addFavourite();
                 break;
             case R.id.action_info:
                 if (!detailsPresent) {
@@ -220,6 +220,36 @@ public class RestaurantActivity extends AppCompatActivity {
                 getFragmentManager().beginTransaction()
                         .add(R.id.restaurant_info_root, detailsFragment)
                         .hide(detailsFragment).commit();
+            }
+        }.execute();
+    }
+
+    public void addFavourite() {
+        new AsyncTask<Void, Void, Void>() {
+            JSONObject jsonObject = null;
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    jsonObject = MainActivity.handler.handleRequest("AddFavoriteRestaurant", String.valueOf(restaurant.id),
+                            Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Log.e("response", jsonObject.toString());
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                try {
+                    String text = jsonObject.getString("msg");
+                    Toast.makeText(RestaurantActivity.this,text,Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         }.execute();
     }

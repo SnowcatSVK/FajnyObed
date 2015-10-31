@@ -57,7 +57,7 @@ public class RequestHandler {
         return key;
     }
 
-    public JSONObject handleRequest(String function, String param, String param2) throws IOException{
+    public JSONObject handleRequest(String function, String param, String param2) throws IOException {
         JSONObject returnJSON;
         try {
             urlConnection = (HttpURLConnection) apiUrl.openConnection();
@@ -86,24 +86,31 @@ public class RequestHandler {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("function", function);
-            if (param != null && param2 != null) {
-                jsonObject.put("gps_alt", param);
-                jsonObject.put("gps_lnt", param2);
-            } else {
-                if (param != null) {
-                    switch (function) {
-                        case "GetRestaurantDetail":
-                            jsonObject.put("restaurant_id", param);
-                            break;
-                        case "GetRestaurantListByCity":
-                            jsonObject.put("city_id", param);
-                            break;
-                        case "GetMenu":
-                            jsonObject.put("restaurant_id", param);
-                            break;
-                    }
-
+            if (param != null) {
+                switch (function) {
+                    case "GetRestaurantDetail":
+                        jsonObject.put("restaurant_id", param);
+                        break;
+                    case "GetRestaurantListByCity":
+                        jsonObject.put("city_id", param);
+                        break;
+                    case "GetMenu":
+                        jsonObject.put("restaurant_id", param);
+                        break;
+                    case "GetFavoriteRestaurant":
+                        jsonObject.put("device_id", param);
+                        break;
+                    case "AddFavoriteRestaurant":
+                        jsonObject.put("restaurant_id", param);
+                        jsonObject.put("device_id", param2);
+                        break;
+                    case "DeleteFavoriteRestaurant":
+                        jsonObject.put("restaurant_id", param);
+                        jsonObject.put("device_id", param2);
+                        break;
                 }
+                //{"function":"AddFavoriteRestaurant","restaurant_id":"2853","device_id":"AF8D65A89FSD59A85F689FAS"}
+                //{"function":"GetFavoriteRestaurant","device_id":"AF8D65A89FSD59A85F689FAS"}
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -131,7 +138,7 @@ public class RequestHandler {
 
     }
 
-    private InputStream getDataInputStream(InputStream stream) throws IOException{
+    private InputStream getDataInputStream(InputStream stream) throws IOException {
         byte[] iv = new byte[16];
         try {
             stream.read(iv, 0, 16);

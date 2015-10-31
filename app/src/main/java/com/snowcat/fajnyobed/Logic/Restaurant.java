@@ -1,11 +1,12 @@
 package com.snowcat.fajnyobed.Logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Snowcat on 26.7.2015.
  */
-public class Restaurant {
+public class Restaurant implements Serializable {
 
     public int id;
     public String name;

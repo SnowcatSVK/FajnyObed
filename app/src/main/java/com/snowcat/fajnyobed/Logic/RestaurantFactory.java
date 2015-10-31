@@ -116,4 +116,16 @@ public class RestaurantFactory {
         }
         return null;
     }
+
+    public static ArrayList<Restaurant> parseFavourites(JSONArray array) {
+        ArrayList<Restaurant> favourites = new ArrayList<>();
+        for (int i=0; i< array.length(); i++) {
+            try {
+                favourites.add(restaurantFromJSON(array.getJSONObject(i)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return favourites;
+    }
 }
