@@ -18,5 +18,7 @@ public class Restaurant implements Serializable {
     public ArrayList<String> openHours;
     public ArrayList<String> promoPhotos;
     public ArrayList<DailyMenu> menus;
+    public ArrayList<String> paymentCards;
+    public ArrayList<String> foodTickets;
 
 }

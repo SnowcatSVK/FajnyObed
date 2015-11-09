@@ -74,6 +74,40 @@ public class RestaurantFactory {
         return photoURLs;
     }
 
+    public static ArrayList<String> getCards(JSONObject paycards) throws JSONException {
+        ArrayList<String> cards = new ArrayList<>();
+        if (paycards.getInt("diners_club") == 1)
+            cards.add("diners_club");
+        if (paycards.getInt("maestro") == 1)
+            cards.add("maestro");
+        if (paycards.getInt("mastercard") == 1)
+            cards.add("mastercard");
+        if (paycards.getInt("mastercard_electronic") == 1)
+            cards.add("mastercard_electronic");
+        if (paycards.getInt("v_pay") == 1)
+            cards.add("v_pay");
+        if (paycards.getInt("visa") == 1)
+            cards.add("visa");
+        if (paycards.getInt("visa_electronic") == 1)
+            cards.add("visa_electronic");
+        return cards;
+    }
+
+    public static ArrayList<String> getFoodTickets(JSONObject foodTickets) throws JSONException {
+        ArrayList<String> cards = new ArrayList<>();
+        if (foodTickets.getInt("sodexho") == 1)
+            cards.add("sodexho");
+        if (foodTickets.getInt("cheque_dejeuner") == 1)
+            cards.add("cheque_dejeuner");
+        if (foodTickets.getInt("doxx") == 1)
+            cards.add("doxx");
+        if (foodTickets.getInt("ticket_restaurant") == 1)
+            cards.add("ticket_restaurant");
+        if (foodTickets.getInt("vasa_stravovacia") == 1)
+            cards.add("vasa_stravovacia");
+        return cards;
+    }
+
     public static Restaurant restaurantDetailsFromJSON(JSONObject jsonObject) {
         Restaurant restaurant = new Restaurant();
         try {
@@ -87,6 +121,8 @@ public class RestaurantFactory {
             restaurant.openHours = getOpenHours(jsonObject.getJSONObject("open"));
             restaurant.promoPhotos = getPromoPhotos(jsonObject.getJSONObject("promo_foto"));
             restaurant.menus = getDailyMenus(jsonObject.optJSONArray("daily_menu"));
+            restaurant.paymentCards = getCards(jsonObject.getJSONObject("paycard"));
+            restaurant.foodTickets = getFoodTickets(jsonObject.getJSONObject("foodticket"));
             Log.e("Zbehol", "RestaurantDetail");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -119,7 +155,7 @@ public class RestaurantFactory {
 
     public static ArrayList<Restaurant> parseFavourites(JSONArray array) {
         ArrayList<Restaurant> favourites = new ArrayList<>();
-        for (int i=0; i< array.length(); i++) {
+        for (int i = 0; i < array.length(); i++) {
             try {
                 favourites.add(restaurantFromJSON(array.getJSONObject(i)));
             } catch (JSONException e) {

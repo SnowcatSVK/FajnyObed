@@ -1,50 +1,328 @@
+<?xml version="1.0"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.snowcat.fajnyobed.DetailsFragment"
-    android:background="#fff">
+    android:background="#fff"
+    tools:context="com.snowcat.fajnyobed.DetailsFragment">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_silver"
-        />
+        android:background="@drawable/bg_silver" />
 
-    <TextView
-        android:id="@+id/open_hours_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:text="OTVÁRACIE"
-        android:textColor="?attr/colorPrimaryDark"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:textSize="18sp" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/open_hours_textView"
-        android:text="HODINY"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:textColor="?attr/colorPrimaryDark"
-        android:textSize="18sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/open_hours_listView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/open_hours_textView"
-        android:layout_toRightOf="@id/open_hours_textView"
-        android:divider="@android:color/transparent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
-        android:dividerHeight="0dp"/>
+            <TextView
+                android:id="@+id/open_hours_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="start"
+                android:text="OTVÁRACIE"
+                android:textColor="?attr/colorPrimaryDark"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/open_hours_textView"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:text="HODINY"
+                android:textColor="?attr/colorPrimaryDark"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/open_hours_linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@id/open_hours_textView"
+                android:layout_toRightOf="@id/open_hours_textView"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/open_hours_textView0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:gravity="end"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/open_hours_textView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="5dp"
+                    android:gravity="end"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/open_hours_textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="5dp"
+                    android:gravity="end"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/open_hours_textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="5dp"
+                    android:gravity="end"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/open_hours_textView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="5dp"
+                    android:gravity="end"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/open_hours_textView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="5dp"
+                    android:gravity="end"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/open_hours_textView6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="5dp"
+                    android:gravity="end"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/payments_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/open_hours_linearLayout"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="start"
+                android:text="PLATOBNÉ"
+                android:textColor="?attr/colorPrimaryDark"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/payments_textView"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:text="KARTY"
+                android:textColor="?attr/colorPrimaryDark"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/paycards_linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:layout_below="@id/open_hours_linearLayout"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@id/open_hours_textView"
+                android:layout_toRightOf="@id/open_hours_textView"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/paycard_ImageView0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#fff"
+                        android:src="@drawable/diners_club_international" />
+
+                    <ImageView
+                        android:id="@+id/paycard_ImageView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:background="#fff"
+                        android:src="@drawable/visa" />
+
+                    <ImageView
+                        android:id="@+id/paycard_ImageView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:background="#fff"
+                        android:src="@drawable/visa_electron" />
+
+                    <ImageView
+                        android:id="@+id/paycard_ImageView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:background="#fff"
+                        android:src="@drawable/v_pay_logo" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:id="@+id/paycard_ImageView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/master_card" />
+
+                    <ImageView
+                        android:id="@+id/paycard_ImageView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/mastercard_electronic" />
+
+                    <ImageView
+                        android:id="@+id/paycard_ImageView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/maestro_logo" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/food_tickets_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/paycards_linearLayout"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="start"
+                android:text="STRAVNÉ"
+                android:textColor="?attr/colorPrimaryDark"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/food_tickets_textView"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:text="LÍSTKY"
+                android:textColor="?attr/colorPrimaryDark"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/food_tickets_linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:layout_below="@id/paycards_linearLayout"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@id/open_hours_textView"
+                android:layout_toRightOf="@id/open_hours_textView"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/food_tickets_ImageView0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/sodexho" />
+
+                    <ImageView
+                        android:id="@+id/food_tickets_ImageView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/vasa_stravovacia" />
+
+                    <ImageView
+                        android:id="@+id/food_tickets_ImageView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/cheque" />
+
+                    <ImageView
+                        android:id="@+id/food_tickets_ImageView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/ticket_restaurant" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:id="@+id/food_tickets_ImageView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:src="@drawable/doxx" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </RelativeLayout>
