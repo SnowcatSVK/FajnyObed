@@ -62,7 +62,9 @@ public class RequestHandler {
         try {
             urlConnection = (HttpURLConnection) apiUrl.openConnection();
             urlConnection.setDoOutput(true);
-            urlConnection.setConnectTimeout(10000);
+            urlConnection.setReadTimeout(10000);
+            urlConnection.setConnectTimeout(15000);
+            urlConnection.setDoInput(true);
             byte[] iv = new byte[16];
             new Random().nextBytes(iv);
             BufferedOutputStream byteArrayOutputStream = new BufferedOutputStream(urlConnection.getOutputStream());
@@ -72,7 +74,10 @@ public class RequestHandler {
             cipher.init(Cipher.ENCRYPT_MODE, getKey(), new IvParameterSpec(iv));
             OutputStream outputStream = new CipherOutputStream(byteArrayOutputStream, cipher);
             DeflaterOutputStream compressedStream = new DeflaterOutputStream(outputStream);
-            compressedStream.write(parseJSON(function, param, param2).getBytes());
+            String requestJSON = parseJSON(function, param, param2);
+            Log.e("Request",requestJSON);
+            compressedStream.write(requestJSON.getBytes());
+            compressedStream.flush();
             compressedStream.close();
             return new JSONObject(convertStreamToString(getDataInputStream(urlConnection.getInputStream())));
 
@@ -111,10 +116,12 @@ public class RequestHandler {
                 }
                 //{"function":"AddFavoriteRestaurant","restaurant_id":"2853","device_id":"AF8D65A89FSD59A85F689FAS"}
                 //{"function":"GetFavoriteRestaurant","device_id":"AF8D65A89FSD59A85F689FAS"}
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.e("Request",jsonObject.toString());
         return jsonObject.toString();
     }
 

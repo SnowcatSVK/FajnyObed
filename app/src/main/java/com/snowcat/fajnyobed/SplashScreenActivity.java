@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.snowcat.fajnyobed.Logic.City;
 import com.snowcat.fajnyobed.Logic.CityFactory;
@@ -27,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -147,28 +149,45 @@ public class SplashScreenActivity extends Activity {
     }
 
     public void getCities() {
-        new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Void, Void, Boolean>() {
             JSONObject jsonObject = null;
 
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Boolean doInBackground(Void... params) {
                 try {
                     jsonObject = handler.handleRequest("GetCityList", null, null);
-                    Log.e("response", jsonObject.toString());
-                } catch (Exception e) {
+                    if (jsonObject != null) {
+                        Log.e("response", jsonObject.toString());
+                        return true;
+                    }
+                } catch (SocketTimeoutException e) {
+                    return false;
+                } catch (IOException e) {
                     e.printStackTrace();
+                    return false;
                 }
                 return null;
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
+            protected void onPostExecute(Boolean aVoid) {
                 super.onPostExecute(aVoid);
-                cities = CityFactory.fromJSON(jsonObject);
-                try {
-                    initPosition();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (aVoid) {
+                    cities = CityFactory.fromJSON(jsonObject);
+                    try {
+                        initPosition();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(SplashScreenActivity.this, "Zlyhalo internetové pripojenie", Toast.LENGTH_LONG).show();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    },2000);
                 }
             }
         }.execute();

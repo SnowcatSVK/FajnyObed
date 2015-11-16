@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -42,6 +43,22 @@ public class DetailsFragment extends Fragment {
 
         for (int i = 0; i < 7; i++) {
             textViews.get(i).setText(RestaurantActivity.restaurant.openHours.get(i));
+        }
+        if (RestaurantActivity.restaurant.paymentCards.size()==0) {
+            TextView tv0 = (TextView) rootView.findViewById(R.id.payments_textView);
+            TextView tv1 = (TextView) rootView.findViewById(R.id.payments_textView1);
+            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.paycards_linearLayout);
+            tv0.setVisibility(View.GONE);
+            tv1.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.GONE);
+        }
+        if (RestaurantActivity.restaurant.foodTickets.size()==0) {
+            TextView tv0 = (TextView) rootView.findViewById(R.id.food_tickets_textView);
+            TextView tv1 = (TextView) rootView.findViewById(R.id.food_tickets_textView1);
+            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.food_tickets_linearLayout);
+            tv0.setVisibility(View.GONE);
+            tv1.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.GONE);
         }
         return rootView;
     }

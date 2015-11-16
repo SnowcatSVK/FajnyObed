@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -38,6 +39,7 @@ import com.snowcat.fajnyobed.io.SHA_256;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.text.Normalizer;
 import java.util.ArrayList;
 
@@ -112,8 +114,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                search(charSequence, restaurantListView);
-                if (charSequence.length() >= 1) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                search(editable, restaurantListView);
+                if (editable.length() >= 1) {
                     isSearchOn = true;
                 } else {
                     isSearchOn = false;
@@ -122,11 +129,6 @@ public class MainActivity extends AppCompatActivity {
                     restaurantListView.setAdapter(restaurantsAdapter);
 
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
             }
         });
 
@@ -221,6 +223,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        getSupportFragmentManager().beginTransaction()
+                .hide(favouritesFragment)
+                .commit();
+        favouritesPresent = false;
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         /*{"function":"GetRestaurantDetail","restaurant_id":"4884"}*/
@@ -235,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void search(CharSequence charSequence, ListView listView) {
+    public void search(Editable charSequence, ListView listView) {
         searchResults = new ArrayList<>();
         String caseOne;
         String caseTwo;
@@ -253,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getRestaurants(final int id) {
-        new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Void, Void, Boolean>() {
             JSONObject jsonObject = null;
 
             @Override
@@ -263,23 +274,32 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Boolean doInBackground(Void... params) {
                 try {
                     jsonObject = handler.handleRequest("GetRestaurantListByCity", String.valueOf(id), null);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    if (jsonObject != null)
+                        Log.e("response", jsonObject.toString());
+                        return true;
+                } catch (SocketTimeoutException e) {
+                    return false;
                 }
-                Log.e("response", jsonObject.toString());
-                return null;
+                catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
+            protected void onPostExecute(Boolean aVoid) {
                 super.onPostExecute(aVoid);
-                restaurants = RestaurantFactory.fromJSON(jsonObject);
-                restaurantsAdapter = new RestaurantAdapter(MainActivity.this, restaurants);
-                restaurantListView.setAdapter(restaurantsAdapter);
-                progressBar.setVisibility(View.GONE);
+                if (aVoid) {
+                    restaurants = RestaurantFactory.fromJSON(jsonObject);
+                    restaurantsAdapter = new RestaurantAdapter(MainActivity.this, restaurants);
+                    restaurantListView.setAdapter(restaurantsAdapter);
+                    progressBar.setVisibility(View.GONE);
+                } else {
+                    Toast.makeText(MainActivity.this, "Zlyhalo internetové pripojenie", Toast.LENGTH_LONG).show();
+                }
             }
         }.execute();
     }
@@ -296,11 +316,12 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                 }
+                restaurantsAdapter.clear();
                 getRestaurants(cityID);
             }
         } else {
             if (resultCode == RESULT_CANCELED) {
-                getRestaurants(1);
+                getRestaurants(cityID);
             }
         }
     }

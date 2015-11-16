@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.snowcat.fajnyobed.Logic.FavouritesArrayAdapter;
@@ -22,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 
@@ -33,6 +35,7 @@ public class FavouritesFragment extends Fragment {
     public ListView favouritesList;
     public ArrayList<Restaurant> favourites;
     public FavouritesArrayAdapter adapter;
+    public TextView noFavTextView;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -52,69 +55,89 @@ public class FavouritesFragment extends Fragment {
                 return true;
             }
         });
-
+        noFavTextView = (TextView) rootView.findViewById(R.id.no_fav_textView);
         return rootView;
     }
 
     public void getFavourites() {
-        new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Void, Void, Boolean>() {
             JSONObject jsonObject = null;
 
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Boolean doInBackground(Void... params) {
                 try {
                     jsonObject = MainActivity.handler.handleRequest("GetFavoriteRestaurant", Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID), null);
-                    Log.e("response", jsonObject.toString());
-                } catch (Exception e) {
+                    if (jsonObject != null) {
+                        Log.e("response", jsonObject.toString());
+                        return true;
+                    }
+                } catch (SocketTimeoutException e) {
                     e.printStackTrace();
+                    return false;
+                } catch (IOException e) {
+                    return false;
                 }
-                return null;
+                return false;
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
+            protected void onPostExecute(Boolean aVoid) {
                 super.onPostExecute(aVoid);
-                try {
-                    int count = jsonObject.getInt("count");
-                    if (count > 0) {
-                        favourites = RestaurantFactory.parseFavourites(jsonObject.getJSONArray("list"));
-                        adapter = new FavouritesArrayAdapter(getActivity(), favourites);
-                        favouritesList.setAdapter(adapter);
-                    } else {
-                        favourites = null;
+                if (aVoid) {
+                    try {
+                        int count = jsonObject.getInt("count");
+                        if (count > 0) {
+                            favourites = RestaurantFactory.parseFavourites(jsonObject.getJSONArray("list"));
+                            adapter = new FavouritesArrayAdapter(getActivity(), favourites);
+                            favouritesList.setAdapter(adapter);
+                            noFavTextView.setVisibility(View.GONE);
+                        } else {
+                            favourites = null;
+                            noFavTextView.setVisibility(View.VISIBLE);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         }.execute();
     }
 
     public void deleteFavourite(final int position) {
-        new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Void, Void, Boolean>() {
             JSONObject jsonObject = null;
 
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Boolean doInBackground(Void... params) {
                 try {
                     jsonObject = MainActivity.handler.handleRequest("DeleteFavoriteRestaurant", String.valueOf(favourites.get(position).id),
                             Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID));
-                    Log.e("response", jsonObject.toString());
-                } catch (Exception e) {
+                    if (jsonObject != null) {
+                        Log.e("response", jsonObject.toString());
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } catch (SocketTimeoutException e) {
+                    Toast.makeText(getActivity(), "Server neodpovedá", Toast.LENGTH_LONG).show();
+                    return false;
+                } catch (IOException e) {
                     e.printStackTrace();
+                    Toast.makeText(getActivity(), "Zlyhalo internetové pripojenie", Toast.LENGTH_LONG).show();
+                    return false;
                 }
-                return null;
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
+            protected void onPostExecute(Boolean aVoid) {
                 super.onPostExecute(aVoid);
                 try {
                     String text = jsonObject.getString("msg");
                     Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
                     favourites.remove(position);
                     adapter.notifyDataSetChanged();
+                    if (favourites.size()==0)
+                        noFavTextView.setVisibility(View.VISIBLE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

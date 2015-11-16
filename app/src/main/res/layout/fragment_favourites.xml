@@ -2,15 +2,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".MainActivity"
-    android:background="@drawable/outline">
+    android:background="@drawable/outline"
+    tools:context=".MainActivity">
 
     <ListView
         android:id="@+id/favourites_listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="2dp"
         android:paddingBottom="2dp"
-        />
+        android:paddingTop="2dp" />
+
+    <TextView
+        android:id="@+id/no_fav_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="?attr/colorPrimaryDark"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:text="Je to tu prázdne, pridajte si obľúbené reštaurácie"
+        android:paddingRight="28dp"
+        android:paddingEnd="28dp"/>
 
 </RelativeLayout>

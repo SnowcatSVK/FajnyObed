@@ -46,6 +46,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -96,7 +97,7 @@ public class RestaurantActivity extends AppCompatActivity {
         int height = size.y;
         layout = (RelativeLayout) findViewById(R.id.root_layout);
         ViewGroup.LayoutParams lp = promoPhoto.getLayoutParams();
-        lp.height = (width / 16) * 10;
+        lp.height = (width / 16) * 9;
         lp.width = width;
         promoPhoto.setLayoutParams(lp);
         fab = (FloatingActionButton) findViewById(R.id.restaurant_fab);
@@ -189,67 +190,98 @@ public class RestaurantActivity extends AppCompatActivity {
     }
 
     public void getRestaurantDetails(final String restaurantId) {
-        new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Void, Void, Boolean>() {
             JSONObject jsonObject = null;
 
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Boolean doInBackground(Void... params) {
                 try {
                     jsonObject = MainActivity.handler.handleRequest("GetRestaurantDetail", restaurantId, null);
+                    if (jsonObject != null) {
+                        Log.e("response", jsonObject.toString());
+                        return true;
+                    }
+                } catch (SocketTimeoutException e) {
+                    return false;
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return false;
                 }
-                Log.e("response", jsonObject.toString());
-                return null;
+                return false;
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
+            protected void onPostExecute(Boolean aVoid) {
                 super.onPostExecute(aVoid);
-                restaurant = RestaurantFactory.restaurantDetailsFromJSON(jsonObject);
-                ImageLoader.getInstance().displayImage(restaurant.promoPhotos.get(2), promoPhoto, options, animateFirstListener);
-                ViewPager viewPager = (ViewPager) findViewById(R.id.restaurant_viewPager);
-                setupViewPager(viewPager);
-                restaurantNameTextView.setText(restaurant.name);
-                restauratAddressTextView.setText(restaurant.street);
-                menuFragment = new MenuFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.root_layout, menuFragment)
-                        .hide(menuFragment).commit();
-                detailsFragment = new DetailsFragment();
-                getFragmentManager().beginTransaction()
-                        .add(R.id.restaurant_info_root, detailsFragment)
-                        .hide(detailsFragment).commit();
+                if (aVoid) {
+                    restaurant = RestaurantFactory.restaurantDetailsFromJSON(jsonObject);
+                    ImageLoader.getInstance().displayImage(restaurant.promoPhotos.get(2), promoPhoto, options, animateFirstListener);
+                    ViewPager viewPager = (ViewPager) findViewById(R.id.restaurant_viewPager);
+                    setupViewPager(viewPager);
+                    restaurantNameTextView.setText(restaurant.name);
+                    restauratAddressTextView.setText(restaurant.street);
+                    menuFragment = new MenuFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.root_layout, menuFragment)
+                            .hide(menuFragment).commit();
+                    detailsFragment = new DetailsFragment();
+                    getFragmentManager().beginTransaction()
+                            .add(R.id.restaurant_info_root, detailsFragment)
+                            .hide(detailsFragment).commit();
+                    LinearLayout linearLayout = (LinearLayout) findViewById(R.id.clicker_layout);
+                    linearLayout.setVisibility(View.GONE);
+                } else {
+                    Toast.makeText(RestaurantActivity.this, "Zlyhalo internetové pripojenie", Toast.LENGTH_LONG).show();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    },2000);
+                }
             }
         }.execute();
     }
 
     public void addFavourite() {
-        new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Void, Void, Boolean>() {
             JSONObject jsonObject = null;
 
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Boolean doInBackground(Void... params) {
                 try {
                     jsonObject = MainActivity.handler.handleRequest("AddFavoriteRestaurant", String.valueOf(restaurant.id),
                             Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    if (jsonObject != null) {
+                        Log.e("response", jsonObject.toString());
+                        return true;
+                    }
                 }
-                Log.e("response", jsonObject.toString());
-                return null;
+                catch (SocketTimeoutException e) {
+                    return false;
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+                return false;
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
+            protected void onPostExecute(Boolean aVoid) {
                 super.onPostExecute(aVoid);
-                try {
-                    String text = jsonObject.getString("msg");
-                    Toast.makeText(RestaurantActivity.this,text,Toast.LENGTH_LONG).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (aVoid) {
+                    try {
+                        String text = jsonObject.getString("msg");
+                        Toast.makeText(RestaurantActivity.this, text, Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(RestaurantActivity.this, "Zlyhalo pripojenie na internet", Toast.LENGTH_LONG).show();
                 }
-
             }
         }.execute();
     }
@@ -319,7 +351,13 @@ public class RestaurantActivity extends AppCompatActivity {
             }, 500);
 
         } else {
-            super.onBackPressed();
+            if (detailsPresent) {
+                getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.animator.slide_out, R.animator.slide_out)
+                        .hide(detailsFragment).commit();
+                detailsPresent = false;
+            } else
+                super.onBackPressed();
         }
     }
 }

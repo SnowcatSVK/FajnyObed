@@ -132,6 +132,7 @@
                 android:textSize="18sp" />
 
             <TextView
+                android:id="@+id/payments_textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/payments_textView"
@@ -231,6 +232,7 @@
                 android:textSize="18sp" />
 
             <TextView
+                android:id="@+id/food_tickets_textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/food_tickets_textView"

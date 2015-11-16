@@ -68,7 +68,8 @@
                     android:layout_below="@+id/restaurant_name_textView"
                     android:fontFamily="sans-serif-thin"
                     android:textColor="#fff"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:paddingBottom="5dp"/>
             </LinearLayout>
 
             <android.support.design.widget.FloatingActionButton
@@ -77,8 +78,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:src="@drawable/ic_menu"
                 app:layout_anchor="@id/description_layout"
                 app:layout_anchorGravity="top|right|end" />
@@ -151,5 +150,23 @@
         android:layout_height="match_parent"
         android:layout_margin="16dp"
         android:elevation="6dp" />
+
+    <LinearLayout
+        android:id="@+id/clicker_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="#8000"
+        android:elevation="7dp"
+        android:clickable="true">
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar2"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+    </LinearLayout>
 
 </RelativeLayout>

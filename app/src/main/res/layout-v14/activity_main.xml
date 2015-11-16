@@ -45,7 +45,8 @@
                 android:hint="Hladať"
                 android:padding="5dp"
                 android:textColor="#9000"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+                android:singleLine="true"/>
 
             <ImageView
                 android:layout_width="wrap_content"
