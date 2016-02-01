@@ -20,8 +20,12 @@
         android:textColor="?attr/colorPrimaryDark"
         android:gravity="center"
         android:textSize="16sp"
-        android:text="Je to tu prázdne, pridajte si obľúbené reštaurácie"
-        android:paddingRight="28dp"
-        android:paddingEnd="28dp"/>
+        android:text="Je to tu prázdne, pridajte sem svoje obľúbené reštaurácie"
+        android:paddingLeft="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="38dp"
+        android:paddingEnd="38dp"/>
 
 </RelativeLayout>

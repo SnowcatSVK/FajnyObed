@@ -72,7 +72,7 @@ public class SplashScreenActivity extends Activity {
                     startActivity(intent);
                     finish();
                 }
-            }, 2500);
+            }, 1500);
         } else {
             double[] gps = getGPS();
             if (gps[0] != 0.0 && gps[1] != 0.0) {
@@ -95,7 +95,7 @@ public class SplashScreenActivity extends Activity {
                                     startActivity(intent);
                                     finish();
                                 }
-                            }, 1500);
+                            }, 500);
                             return;
                         }
                     }
@@ -109,7 +109,7 @@ public class SplashScreenActivity extends Activity {
                             startActivity(intent);
                             finish();
                         }
-                    }, 1500);
+                    }, 500);
                 }
             } else {
                 Log.e("MapInit", "nieto GPS");
@@ -123,7 +123,7 @@ public class SplashScreenActivity extends Activity {
                         startActivity(intent);
                         finish();
                     }
-                }, 1500);
+                }, 500);
             }
         }
     }

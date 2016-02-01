@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         restaurantListView = (ListView) findViewById(R.id.restaurant_listView);
+        restaurantListView.setLayerType(View.LAYER_TYPE_HARDWARE,null);
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
         config.threadPriority(Thread.NORM_PRIORITY - 2);
         config.denyCacheImageMultipleSizesInMemory();
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         handler = new RequestHandler("http://api.fajnyobed.sk", passwordHash);
         progressBar = (ProgressBar) findViewById(R.id.restaurant_progressBar);
         searchEditText = (EditText) findViewById(R.id.search_editText);
+        searchEditText.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
         searchEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
