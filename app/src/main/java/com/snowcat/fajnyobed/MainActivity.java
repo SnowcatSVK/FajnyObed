@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         restaurantListView = (ListView) findViewById(R.id.restaurant_listView);
-        restaurantListView.setLayerType(View.LAYER_TYPE_HARDWARE,null);
+        restaurantListView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
         config.threadPriority(Thread.NORM_PRIORITY - 2);
         config.denyCacheImageMultipleSizesInMemory();
@@ -121,15 +121,18 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                search(editable, restaurantListView);
-                if (editable.length() >= 1) {
-                    isSearchOn = true;
-                } else {
-                    isSearchOn = false;
-                    restaurantsAdapter = new RestaurantAdapter(MainActivity.this, restaurants);
-                    restaurantsAdapter.notifyDataSetChanged();
-                    restaurantListView.setAdapter(restaurantsAdapter);
+                if (restaurants != null) {
+                    search(editable, restaurantListView);
 
+                    if (editable.length() >= 1) {
+                        isSearchOn = true;
+                    } else {
+                        isSearchOn = false;
+                        restaurantsAdapter = new RestaurantAdapter(MainActivity.this, restaurants);
+                        restaurantsAdapter.notifyDataSetChanged();
+                        restaurantListView.setAdapter(restaurantsAdapter);
+
+                    }
                 }
             }
         });
@@ -245,7 +248,6 @@ public class MainActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
         favouritesFragment.getFavourites();
-
     }
 
     public void search(Editable charSequence, ListView listView) {
@@ -268,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
     public void getRestaurants(final int id) {
         new AsyncTask<Void, Void, Boolean>() {
             JSONObject jsonObject = null;
+            boolean noRestaurants = false;
 
             @Override
             protected void onPreExecute() {
@@ -279,13 +282,16 @@ public class MainActivity extends AppCompatActivity {
             protected Boolean doInBackground(Void... params) {
                 try {
                     jsonObject = handler.handleRequest("GetRestaurantListByCity", String.valueOf(id), null);
-                    if (jsonObject != null)
+                    if (jsonObject != null) {
                         Log.e("response", jsonObject.toString());
                         return true;
+                    } else {
+                        noRestaurants = true;
+                        return false;
+                    }
                 } catch (SocketTimeoutException e) {
                     return false;
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                     return false;
                 }
@@ -300,7 +306,13 @@ public class MainActivity extends AppCompatActivity {
                     restaurantListView.setAdapter(restaurantsAdapter);
                     progressBar.setVisibility(View.GONE);
                 } else {
-                    Toast.makeText(MainActivity.this, "Zlyhalo internetové pripojenie", Toast.LENGTH_LONG).show();
+                    if (noRestaurants) {
+                        Toast.makeText(MainActivity.this, "Pre toto mesto niesu dostupné reštaurácie s menu", Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Zlyhalo internetové pripojenie", Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
                 }
             }
         }.execute();
@@ -318,7 +330,8 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                 }
-                restaurantsAdapter.clear();
+                if (restaurantsAdapter != null)
+                    restaurantsAdapter.clear();
                 getRestaurants(cityID);
             }
         } else {

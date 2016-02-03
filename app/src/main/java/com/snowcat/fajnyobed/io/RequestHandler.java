@@ -75,11 +75,13 @@ public class RequestHandler {
             OutputStream outputStream = new CipherOutputStream(byteArrayOutputStream, cipher);
             DeflaterOutputStream compressedStream = new DeflaterOutputStream(outputStream);
             String requestJSON = parseJSON(function, param, param2);
-            Log.e("Request",requestJSON);
+            Log.e("Request", requestJSON);
             compressedStream.write(requestJSON.getBytes());
             compressedStream.flush();
             compressedStream.close();
-            return new JSONObject(convertStreamToString(getDataInputStream(urlConnection.getInputStream())));
+            JSONObject jsonObject = new JSONObject(convertStreamToString(getDataInputStream(urlConnection.getInputStream())));
+            Log.e("response_handler", jsonObject.toString());
+            return jsonObject;
 
         } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | JSONException e) {
             e.printStackTrace();
