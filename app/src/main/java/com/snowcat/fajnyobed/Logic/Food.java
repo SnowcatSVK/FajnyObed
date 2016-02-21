@@ -10,6 +10,7 @@ public class Food {
     public String foodType;
     public double foodPrice;
     public String desc;
+    public int seq;
 
     public Food() {
     }

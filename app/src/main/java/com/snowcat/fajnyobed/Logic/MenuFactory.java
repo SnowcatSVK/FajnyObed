@@ -24,6 +24,7 @@ public class MenuFactory {
             food.foodName = Html.fromHtml(food.foodName).toString();
             food.foodPrice = foodObject.optDouble("price", 0.0);
             food.desc = foodObject.optString("description",null);
+            food.seq = foodObject.optInt("seq",meals.size());
             if (food.desc != null && food.desc.length()<2) {
                 Log.e("Food desc", food.desc + " bude null");
                 food.desc = null;
@@ -35,7 +36,7 @@ public class MenuFactory {
                 food.foodType = foodObject.getString("category");
                 food.foodType = Html.fromHtml(food.foodType).toString();
             }
-            meals.add(food);
+            meals.add(food.seq,food);
         }
         //Log.e("Zbehol", "MenuFactoryMenuFromJSON");
         return createGroups(meals);
