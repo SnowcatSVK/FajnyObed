@@ -81,4 +81,32 @@ public class MenuFactory {
         //Log.e("Zbehol", "MenuFactoryCreateGroups");
         return groups;
     }
+
+    public static ArrayList<Food> menuFromJSONNoGroups(JSONArray menuJSON) throws JSONException {
+        ArrayList<Food> meals = new ArrayList<>();
+        for (int i = 0; i < menuJSON.length(); i++) {
+            JSONObject foodObject = menuJSON.getJSONObject(i);
+            Food food = new Food();
+
+            food.foodName = foodObject.getString("name");
+            food.foodName = Html.fromHtml(food.foodName).toString();
+            food.foodPrice = foodObject.optDouble("price", 0.0);
+            food.desc = foodObject.optString("description",null);
+            food.seq = foodObject.optInt("seq",meals.size());
+            if (food.desc != null && food.desc.length()<2) {
+                Log.e("Food desc", food.desc + " bude null");
+                food.desc = null;
+            }
+            if (foodObject.isNull("category")) {
+                //Log.e("Zbehol", "category je null");
+                food.foodType = null;
+            } else {
+                food.foodType = foodObject.getString("category");
+                food.foodType = Html.fromHtml(food.foodType).toString();
+            }
+            meals.add(food.seq,food);
+        }
+        //Log.e("Zbehol", "MenuFactoryMenuFromJSON");
+        return meals;
+    }
 }

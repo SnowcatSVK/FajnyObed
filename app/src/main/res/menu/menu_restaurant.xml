@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/action_addFavourite"
-        android:icon="@drawable/favourite_heart"
+        android:icon="@drawable/ic_star_outline"
         android:title="Obľúbené"
         android:orderInCategory="0"
         app:showAsAction="always" />

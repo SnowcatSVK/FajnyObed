@@ -153,11 +153,32 @@ public class RestaurantFactory {
         return null;
     }
 
-    public static ArrayList<Restaurant> parseFavourites(JSONArray array) {
-        ArrayList<Restaurant> favourites = new ArrayList<>();
+    public static FavouriteRestaurant favouriteFromJSON(JSONObject favourite) {
+        FavouriteRestaurant restaurant = new FavouriteRestaurant();
+        try {
+            restaurant.id = favourite.getInt("restaurant_id");
+            restaurant.name = favourite.getString("name");
+            restaurant.street = favourite.getString("street");
+            restaurant.promoPhotos = getPromoPhotos(favourite.getJSONObject("promo_foto"));
+            restaurant.city = favourite.getString("city");
+            restaurant.cityId = favourite.getInt("city_id");
+            JSONArray dailyMenu = favourite.optJSONArray("daily_menu");
+            if (dailyMenu != null) {
+                restaurant.menuForToday = MenuFactory.menuFromJSONNoGroups(dailyMenu);
+            } else {
+                restaurant.menuForToday = null;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  restaurant;
+    }
+
+    public static ArrayList<FavouriteRestaurant> parseFavourites(JSONArray array) {
+        ArrayList<FavouriteRestaurant> favourites = new ArrayList<>();
         for (int i = 0; i < array.length(); i++) {
             try {
-                favourites.add(restaurantFromJSON(array.getJSONObject(i)));
+                favourites.add(favouriteFromJSON(array.getJSONObject(i)));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

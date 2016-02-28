@@ -1,16 +1,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/outline"
+    android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ListView
+    <ExpandableListView
         android:id="@+id/favourites_listView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:divider="#00FFFFFF"
+        android:dividerHeight="0dp"
         android:paddingBottom="2dp"
-        android:paddingTop="2dp" />
+        android:paddingTop="2dp"/>
+
+
 
     <TextView
         android:id="@+id/no_fav_textView"

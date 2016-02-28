@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -191,41 +192,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void onMainFabClick(View v) {
         if (favouritesPresent) {
-            Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
-            layout.startAnimation(animation);
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getSupportFragmentManager().beginTransaction()
-                            .hide(favouritesFragment)
-                            .commit();
-                    favouritesPresent = false;
-                }
-            }, 200);
+            animateChange(true);
 
         } else {
-            getSupportFragmentManager().beginTransaction()
-                    .show(favouritesFragment)
-                    .commit();
-            Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_in);
-            layout.startAnimation(animation);
-            favouritesPresent = true;
-            favouritesFragment.favouritesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String restaurantId = String.valueOf(favouritesFragment.favourites.get(position).id);
-                    Intent i = new Intent(MainActivity.this, RestaurantActivity.class);
-                    i.putExtra("restaurant_id", restaurantId);
-                    startActivity(i);
-                    getSupportFragmentManager().beginTransaction()
-                            .hide(favouritesFragment)
-                            .commit();
-                    favouritesPresent = false;
-                }
-            });
+            animateChange(false);
         }
     }
+
 
     @Override
     protected void onPause() {
@@ -338,6 +311,46 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_CANCELED) {
                 getRestaurants(cityID);
             }
+        }
+    }
+
+    public void animateChange(boolean hide) {
+        if (hide) {
+            Animation favAnimation = AnimationUtils.loadAnimation(this, R.anim.fly_right_from_center);
+            layout.startAnimation(favAnimation);
+            Animation listAnim = AnimationUtils.loadAnimation(this, R.anim.fly_right_from_start);
+            restaurantListView.startAnimation(listAnim);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getSupportFragmentManager().beginTransaction()
+                            .hide(favouritesFragment)
+                            .commit();
+                    favouritesPresent = false;
+                }
+            }, 300);
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .show(favouritesFragment)
+                    .commit();
+            Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fly_left_from_end);
+            layout.startAnimation(animation);
+            Animation listAnim = AnimationUtils.loadAnimation(this, R.anim.fly_left_from_center);
+            restaurantListView.startAnimation(listAnim);
+            favouritesPresent = true;
+            favouritesFragment.favouritesList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                @Override
+                public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                    String restaurantId = String.valueOf(favouritesFragment.favourites.get(groupPosition).id);
+                    Intent i = new Intent(MainActivity.this, RestaurantActivity.class);
+                    i.putExtra("restaurant_id", restaurantId);
+                    startActivity(i);
+                    animateChange(true);
+                    favouritesPresent = false;
+                    return true;
+                }
+            });
         }
     }
 }

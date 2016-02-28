@@ -11,11 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginTop="64dp"
-        android:background="@drawable/gradient_bg"
-        android:src="@drawable/boot_bg" />
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/boot_bg"
+        android:background="@drawable/gradient_bg"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,21 +32,21 @@
             android:background="@drawable/shadow" />
     </LinearLayout>
 
-
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="380dp"
+        android:layout_height="350dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ikona_boot" />
+        android:src="@drawable/hrniec"
+        android:id="@+id/imageView" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/imageView"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/progressBar"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="26dp" />
 
 </RelativeLayout>

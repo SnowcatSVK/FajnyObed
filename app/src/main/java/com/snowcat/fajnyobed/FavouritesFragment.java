@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.snowcat.fajnyobed.Logic.FavouriteRestaurant;
 import com.snowcat.fajnyobed.Logic.FavouritesArrayAdapter;
 import com.snowcat.fajnyobed.Logic.Restaurant;
 import com.snowcat.fajnyobed.Logic.RestaurantFactory;
@@ -32,8 +34,8 @@ import java.util.ArrayList;
  */
 public class FavouritesFragment extends Fragment {
 
-    public ListView favouritesList;
-    public ArrayList<Restaurant> favourites;
+    public ExpandableListView favouritesList;
+    public ArrayList<FavouriteRestaurant> favourites;
     public FavouritesArrayAdapter adapter;
     public TextView noFavTextView;
 
@@ -47,12 +49,33 @@ public class FavouritesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_favourites, container, false);
-        favouritesList = (ListView) rootView.findViewById(R.id.favourites_listView);
+        favouritesList = (ExpandableListView) rootView.findViewById(R.id.favourites_listView);
         favouritesList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                deleteFavourite(position);
-                return true;
+                int itemType = ExpandableListView.getPackedPositionType(id);
+
+                if (itemType == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+
+                    //do your per-item callback here
+                    return false; //true if we consumed the click, false if not
+
+                } else if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+                    //do your per-group callback here
+                    Log.e("Position",String.valueOf(position));
+                    for (int i = 0; i < favourites.size(); i++) {
+                        FavouriteRestaurant restaurant = favourites.get(i);
+                        Log.e("Position in list",String.valueOf(restaurant.positionInList));
+                        if (restaurant.positionInList == position)
+                            deleteFavourite(i);
+                    }
+
+                    return true; //true if we consumed the click, false if not
+
+                } else {
+                    // null item; we don't consume the click
+                    return false;
+                }
             }
         });
         noFavTextView = (TextView) rootView.findViewById(R.id.no_fav_textView);
@@ -91,6 +114,17 @@ public class FavouritesFragment extends Fragment {
                             adapter = new FavouritesArrayAdapter(getActivity(), favourites);
                             favouritesList.setAdapter(adapter);
                             noFavTextView.setVisibility(View.GONE);
+                            favouritesList.setGroupIndicator(null);
+                            for (int i = 0; i < favourites.size(); i++) {
+                                favouritesList.expandGroup(i);
+                                if (i == 0) {
+                                    favourites.get(i).positionInList = 0;
+                                }
+                                if (i + 1 < favourites.size()) {
+                                    favourites.get(i + 1).positionInList = favourites.get(i).positionInList + favouritesList.getExpandableListAdapter().getChildrenCount(i) + 1;
+                                }
+
+                            }
                         } else {
                             favourites = null;
                             noFavTextView.setVisibility(View.VISIBLE);
@@ -135,8 +169,18 @@ public class FavouritesFragment extends Fragment {
                     String text = jsonObject.getString("msg");
                     Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
                     favourites.remove(position);
+                    favouritesList.invalidateViews();
                     adapter.notifyDataSetChanged();
-                    if (favourites.size()==0)
+                    for (int i = 0; i < favourites.size(); i++) {
+                        if (i == 0) {
+                            favourites.get(i).positionInList = 0;
+                        }
+                        if (i + 1 < favourites.size()) {
+                            favourites.get(i + 1).positionInList = favourites.get(i).positionInList + favouritesList.getExpandableListAdapter().getChildrenCount(i) + 1;
+                        }
+
+                    }
+                    if (favourites.size() == 0)
                         noFavTextView.setVisibility(View.VISIBLE);
                 } catch (JSONException e) {
                     e.printStackTrace();
