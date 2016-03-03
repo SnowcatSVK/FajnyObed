@@ -81,8 +81,8 @@
         android:id="@+id/layout_root_favourites"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:elevation="5dp"
         android:layout_below="@+id/appbar"
+        android:elevation="2dp"
         />
 
     <android.support.design.widget.FloatingActionButton
@@ -95,6 +95,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:background="@drawable/fab_background"
         android:onClick="onMainFabClick"
         android:elevation="6dp"
         android:src="@drawable/fav_list"

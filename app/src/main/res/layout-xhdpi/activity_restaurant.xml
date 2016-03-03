@@ -78,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
+                android:background="@drawable/fab_background"
                 android:src="@drawable/ic_menu"
                 app:layout_anchor="@id/description_layout"
                 app:layout_anchorGravity="top|right|end" />

@@ -2,18 +2,16 @@ package com.snowcat.fajnyobed.Logic;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -43,6 +41,7 @@ public class FavouritesArrayAdapter extends BaseExpandableListAdapter {
                 .cacheOnDisk(true)
                 .considerExifParams(true)
                 .resetViewBeforeLoading(true)
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .showImageOnLoading(context.getResources().getDrawable(R.drawable.sad_face_50dp))
                 .displayer(new SimpleBitmapDisplayer())
                 .build();
@@ -103,15 +102,18 @@ public class FavouritesArrayAdapter extends BaseExpandableListAdapter {
         View view = convertView.findViewById(R.id.divider);
         if (groupPosition == 0) {
             view.setVisibility(View.GONE);
+        } else {
+            view.setVisibility(View.VISIBLE);
         }
 
-        if (getChildrenCount(groupPosition) == 0){
+        /*if (getChildrenCount(groupPosition) == 0){
             TextView desc = (TextView) convertView.findViewById(R.id.daily_menu_textView);
             desc.setText("Reštaurácia dnes denné menu nepodáva");
-        }
+        }*/
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.restaurant);
-        ImageLoader.getInstance().displayImage(restaurants.get(groupPosition).promoPhotos.get(0), imageView, options, animateFirstListener);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        ImageLoader.getInstance().displayImage(restaurants.get(groupPosition).promoPhotos.get(2), imageView, options, animateFirstListener);
         return convertView;
     }
 

@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -84,10 +85,12 @@ public class RestaurantActivity extends AppCompatActivity {
                 .cacheOnDisk(true)
                 .considerExifParams(true)
                 .displayer(new SimpleBitmapDisplayer())
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .showImageOnLoading(getResources().getDrawable(R.drawable.boot_pic_red))
                 .showImageOnFail(getResources().getDrawable(R.drawable.boot_pic_red))
                 .build();
         promoPhoto = (ImageView) findViewById(R.id.restaurant_imageView);
+        promoPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
         restaurantNameTextView = (TextView) findViewById(R.id.restaurant_name_textView);
         restauratAddressTextView = (TextView) findViewById(R.id.restaurant_address_textView);
         Display display = getWindowManager().getDefaultDisplay();
@@ -97,7 +100,7 @@ public class RestaurantActivity extends AppCompatActivity {
         int height = size.y;
         layout = (RelativeLayout) findViewById(R.id.root_layout);
         ViewGroup.LayoutParams lp = promoPhoto.getLayoutParams();
-        lp.height = (width / 16) * 9;
+        lp.height = (width / 16) * 8;
         lp.width = width;
         promoPhoto.setLayoutParams(lp);
         fab = (FloatingActionButton) findViewById(R.id.restaurant_fab);

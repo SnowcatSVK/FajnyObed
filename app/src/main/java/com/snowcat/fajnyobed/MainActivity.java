@@ -26,10 +26,12 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.cache.disc.impl.LimitedAgeDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.snowcat.fajnyobed.Logic.City;
 import com.snowcat.fajnyobed.Logic.Restaurant;
 import com.snowcat.fajnyobed.Logic.RestaurantAdapter;
@@ -39,6 +41,7 @@ import com.snowcat.fajnyobed.io.SHA_256;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.text.Normalizer;
@@ -72,9 +75,11 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         restaurantListView = (ListView) findViewById(R.id.restaurant_listView);
         restaurantListView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        File cacheDir = StorageUtils.getCacheDirectory(this);
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
         config.threadPriority(Thread.NORM_PRIORITY - 2);
         config.denyCacheImageMultipleSizesInMemory();
+        config.diskCache(new LimitedAgeDiskCache(cacheDir, 86400));
         config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
         config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
         config.tasksProcessingOrder(QueueProcessingType.LIFO);
@@ -203,10 +208,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        getSupportFragmentManager().beginTransaction()
+        /*getSupportFragmentManager().beginTransaction()
                 .hide(favouritesFragment)
                 .commit();
-        favouritesPresent = false;
+        favouritesPresent = false;*/
     }
 
     @Override

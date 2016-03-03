@@ -85,16 +85,9 @@
     <RelativeLayout
         android:id="@+id/layout_root_favourites"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/fab"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="42dp"
-        android:layout_marginEnd="27dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="27dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="65dp"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appbar"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -106,6 +99,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:background="@drawable/fab_background"
         android:onClick="onMainFabClick"
         android:src="@drawable/fav_list"
         app:borderWidth="0dp" />
