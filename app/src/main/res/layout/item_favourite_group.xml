@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="8dp">
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:background="#AF2A34"/>
 
     <ImageView
@@ -15,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:layout_below="@+id/divider"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         />
 
     <LinearLayout
@@ -48,7 +51,8 @@
             android:singleLine="true"
             android:fontFamily="sans-serif-thin"
             android:textSize="16sp"
-            android:textColor="#fff"/>
+            android:textColor="#fff"
+            android:layout_marginBottom="3dp"/>
 
         <!--<TextView
             android:id="@+id/daily_menu_textView"
