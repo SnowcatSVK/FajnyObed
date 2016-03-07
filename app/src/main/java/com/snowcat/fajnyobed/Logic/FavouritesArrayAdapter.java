@@ -106,10 +106,10 @@ public class FavouritesArrayAdapter extends BaseExpandableListAdapter {
             view.setVisibility(View.VISIBLE);
         }
 
-        /*if (getChildrenCount(groupPosition) == 0){
+        if (getChildrenCount(groupPosition) == 0){
             TextView desc = (TextView) convertView.findViewById(R.id.daily_menu_textView);
-            desc.setText("Reštaurácia dnes denné menu nepodáva");
-        }*/
+            desc.setVisibility(View.VISIBLE);
+        }
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.restaurant);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);

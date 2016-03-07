@@ -41,7 +41,8 @@
             android:singleLine="true"
             android:textSize="20sp"
             android:fontFamily="sans-serif-light"
-            android:textColor="#fff"/>
+            android:textColor="#fff"
+            android:layout_marginBottom="3dp"/>
 
         <TextView
             android:id="@+id/restaurant_list_place_textView"
@@ -53,13 +54,15 @@
             android:textSize="16sp"
             android:textColor="#fff"
             android:layout_marginBottom="3dp"/>
-
-        <!--<TextView
+        <TextView
             android:id="@+id/daily_menu_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Denné menu:"
-            android:textSize="14sp"/>
-            -->
+            android:text="Reštaurácia dnes denné menu nepodáva"
+            android:fontFamily="sans-serif-thin"
+            android:textSize="16sp"
+            android:textColor="#fff"
+            android:layout_marginBottom="3dp"
+            android:visibility="gone"/>
          </LinearLayout>
 </RelativeLayout>
